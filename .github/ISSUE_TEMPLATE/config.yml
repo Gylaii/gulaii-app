@@ -1,0 +1,13 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Feature Request
+    url: https://github.com/Gylaii/gulaii-app/issues
+    about: Please suggest your ideas to make Gulaii better.
+
+  - name: Questions and Discussions
+    url: https://github.com/Gylaii/gulaii-app/discussions
+    about: Visit our GitHub Discussions page to ask and answer questions, discuss features, or reach out for help.
+
+  - name: Gulaii/gualii-app Public Backlog
+    url: https://github.com/orgs/Gylaii/projects/4
+    about: See what's next on our public backlog at Github Projects, where you can submit your ideas and vote for the features you want.
