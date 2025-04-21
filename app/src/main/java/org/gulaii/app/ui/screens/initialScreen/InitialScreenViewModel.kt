@@ -9,7 +9,4 @@ class InitialScreenViewModel : ViewModel() {
     private val _headerText = MutableStateFlow("Gulaii")
     val headerText = _headerText.asStateFlow()
 
-    fun onButtonClick() {
-        _headerText.value = "Gullai"
-    }
 }

@@ -1,7 +1,8 @@
 <resources>
-    <string name="app_name">Gulaii</string>
-    <string name="title_activity_main">MainActivity</string>
-    <string name="title_activity_initial_screen">InitialScreen</string>
-    <string name="initial_screen_main_header">GULAII</string>
-    <string name="initial_screen_secondary_header">Health platform</string>
+  <string name="app_name">Gulaii</string>
+  <string name="title_activity_main">MainActivity</string>
+  <string name="title_activity_initial_screen">InitialScreen</string>
+  <string name="initial_screen_main_header">GULAII</string>
+  <string name="initial_screen_secondary_header">Health platform</string>
+  <string name="arrow_forward_description">Arrow Forward</string>
 </resources>
