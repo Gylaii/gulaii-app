@@ -38,8 +38,8 @@ fun AppNavHost(
     ) {
       composable(route = Screen.Onboarding.route) {
         OnboardingView(
-          onNext = {
-            //to do
+          onFinished = {
+            navController.navigate("initial_graph")
           }
         )
       }
