@@ -22,6 +22,12 @@ misc.xml
 deploymentTargetDropDown.xml
 render.experimental.xml
 
+# Java
+.mtj.tmp/
+*.class
+hs_err_pid*
+replay_pid*
+
 # Keystore files
 *.jks
 *.keystore

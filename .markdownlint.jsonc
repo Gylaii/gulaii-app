@@ -1,0 +1,37 @@
+{
+  // I can set heading levels at my discretion!
+  "MD001": false,
+
+  // Style of unordered lists.
+  "MD007": {
+    "indent": 2,
+    "start_indented": false
+  },
+
+  // no-trailing-spaces: true
+  "MD009": false,
+
+  // Line length. Who cares.
+  "MD013": false,
+
+  // Multiple headings with the same content. That's fine.
+  "MD024": false,
+
+  // Wrong detection of multiple quotes.
+  "MD028": false,
+
+  // Sometimes it needed to place fences in list and so on...
+  "MD031": false,
+
+  // Because I love inlining a little HTML in my markdown.
+  "MD033": false,
+
+  // Bare links are OK
+  "MD034": false,
+
+  // I want to add a picture at the top of README...
+  "MD041": false,
+
+  // MDLint doesn't really understand GitHub markdown
+  "MD053": false
+}
