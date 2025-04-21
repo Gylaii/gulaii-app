@@ -46,9 +46,11 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.ui.graphics)
+    implementation(libs.androidx.ui.test.junit4.android)
+    implementation(libs.androidx.navigation.compose)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.0")
 
     val composeBom = platform("androidx.compose:compose-bom:2025.02.00")
     implementation(composeBom)
