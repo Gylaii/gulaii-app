@@ -1,6 +1,13 @@
 package org.gulaii.app.ui.navigation
+import kotlinx.serialization.Serializable
 
-sealed class Screen(val route: String) {
-  object Initial : Screen("initial_screen")
-  object Onboarding : Screen("onboarding_screen")
+@Serializable
+sealed interface Screen {
+  @Serializable data object Initial   : Screen
+  @Serializable data object Onboarding: Screen
+  @Serializable data object Auth      : Screen
 }
+
+@Serializable data object InitialGraph
+@Serializable data object OnboardingGraph
+@Serializable data object AuthGraph
