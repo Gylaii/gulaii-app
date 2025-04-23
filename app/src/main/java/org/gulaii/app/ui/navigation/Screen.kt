@@ -11,3 +11,4 @@ sealed interface Screen {
 @Serializable data object InitialGraph
 @Serializable data object OnboardingGraph
 @Serializable data object AuthGraph
+

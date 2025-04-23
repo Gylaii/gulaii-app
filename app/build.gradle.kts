@@ -94,6 +94,7 @@ dependencies {
   implementation("androidx.compose.runtime:runtime-livedata")
   // Optional - Integration with RxJava
   implementation("androidx.compose.runtime:runtime-rxjava2")
-// https://mvnrepository.com/artifact/org.jetbrains.kotlinx/kotlinx-serialization-json-jvm
+  // https://mvnrepository.com/artifact/org.jetbrains.kotlinx/kotlinx-serialization-json-jvm
   implementation("org.jetbrains.kotlinx:kotlinx-serialization-json-jvm:1.8.0")
+
 }
