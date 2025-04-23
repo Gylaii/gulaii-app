@@ -4,11 +4,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
-import org.gulaii.app.ui.navigation.AuthGraph
 import org.gulaii.app.ui.navigation.InitialGraph
 import org.gulaii.app.ui.navigation.OnboardingGraph
 import org.gulaii.app.ui.navigation.Screen
-import org.gulaii.app.ui.screens.authScreen.AuthScreenView
 import org.gulaii.app.ui.screens.initialScreen.InitialScreenView
 import org.gulaii.app.ui.screens.onboardingScreen.OnboardingView
 
@@ -36,15 +34,6 @@ fun AppNavHost(
             composable<Screen.Onboarding> {
                 OnboardingView(
                     onFinished = { navController.navigate(Screen.Auth) }
-                )
-            }
-        }
-
-        //Auth Navigation Graph
-        navigation<AuthGraph>(startDestination = Screen.Auth) {
-            composable<Screen.Auth> {
-                AuthScreenView(
-                    onSubmit = { navController.navigate(Screen.Onboarding) }
                 )
             }
         }
