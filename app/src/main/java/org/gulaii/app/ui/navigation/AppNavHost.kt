@@ -6,6 +6,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import org.gulaii.app.ui.navigation.InitialGraph
 import org.gulaii.app.ui.navigation.OnboardingGraph
+import org.gulaii.app.ui.navigation.Screen
+import org.gulaii.app.ui.screens.initialScreen.InitialScreenView
+import org.gulaii.app.ui.screens.onboardingScreen.OnboardingView
 
 @Composable
 fun AppNavHost(
