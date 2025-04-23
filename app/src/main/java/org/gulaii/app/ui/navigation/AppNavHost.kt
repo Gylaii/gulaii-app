@@ -4,45 +4,35 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
-import org.gulaii.app.ui.navigation.Screen
-import org.gulaii.app.ui.screens.initialScreen.InitialScreenView
-import org.gulaii.app.ui.screens.onboardingScreen.OnboardingView
+import org.gulaii.app.ui.navigation.InitialGraph
+import org.gulaii.app.ui.navigation.OnboardingGraph
 
 @Composable
 fun AppNavHost(
-  navController: NavHostController,
-  modifier: Modifier = Modifier,
+    navController: NavHostController,
+    modifier: Modifier = Modifier,
 ) {
-  NavHost(
-    navController = navController,
-    startDestination = "initial_graph", // Начинаем с вложенного графа Initial
-    modifier = modifier
-  ) {
-    navigation(
-      startDestination = Screen.Initial.route,
-      route = "initial_graph"
+    NavHost(
+        navController = navController,
+        startDestination = InitialGraph,
+        modifier = modifier
     ) {
-      composable(route = Screen.Initial.route) {
-        InitialScreenView(
-          onNext = {
-            navController.navigate("onboarding_graph")
-          }
-        )
-      }
-    }
+        //Initial Navigation Graph
+        navigation<InitialGraph>(startDestination = Screen.Initial) {
+            composable<Screen.Initial> {
+                InitialScreenView(
+                    onNext = { navController.navigate(OnboardingGraph) }
+                )
+            }
+        }
 
-    // Вложенный граф для онбординга
-    navigation(
-      startDestination = Screen.Onboarding.route,
-      route = "onboarding_graph"
-    ) {
-      composable(route = Screen.Onboarding.route) {
-        OnboardingView(
-          onFinished = {
-            navController.navigate("initial_graph")
-          }
-        )
-      }
+        //Onboarding Navigation Graph
+        navigation<OnboardingGraph>(startDestination = Screen.Onboarding) {
+            composable<Screen.Onboarding> {
+                OnboardingView(
+                    onFinished = { navController.navigate(Screen.Auth) }
+                )
+            }
+        }
     }
-  }
 }
