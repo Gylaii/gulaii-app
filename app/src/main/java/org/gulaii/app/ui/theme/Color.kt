@@ -6,9 +6,6 @@ val PrimaryBlue = Color(0xFF4D55CC) // FIXME: remove later
 val SecondaryBlue = Color(0xFF60B5FF) // FIXME: remove later
 val SoftBlue = Color(0xFFAFDDFF) // FIXME: remove later
 val AccentBlue = Color(0xFF261FB3) // FIXME: remove later
-val SecondaryOrange = Color(0xFFFFA955) // FIXME: remove later
-val PurpleGrey80 = Color(0xFFCCC2DC) // FIXME: remove later
-val PurpleGrey40 = Color(0xFF625b71) // FIXME: remove later
 
 val primaryLight = Color(0xFF9E3D00)
 val onPrimaryLight = Color(0xFFFFFFFF)

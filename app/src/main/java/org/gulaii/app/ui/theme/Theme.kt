@@ -262,8 +262,13 @@ val unspecified_scheme = ColorFamily(
 @Composable
 fun GulaiiTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
+    /*
+    Dynamic color is available on Android 12+. It automatically picks up system
+    colors (from wallpaper). But our custom colors from lightScheme/darkScheme
+    are ignored when Dynamic Color is enabled. So we'll disable it during development.
+     */
+    // FIXME: enable after completing the basic design of the application
+    dynamicColor: Boolean = false,
     // TODO: use based on user's contrast level settings
     contrastLevel: ContrastLevel = ContrastLevel.Default,
     content: @Composable () -> Unit
