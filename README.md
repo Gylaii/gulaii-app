@@ -1,4 +1,4 @@
-<img align="right" src="https://raw.githubusercontent.com/Gylaii/gulaii-app/refs/heads/master/docs/assets/logo.png" alt="Gulaii logo" width="365">
+<img align="right" src="https://raw.githubusercontent.com/Gylaii/gulaii-app/refs/heads/master/docs/assets/logo-transparent-borders.png" alt="Gulaii logo" width="365">
 
 # гуляй
 
