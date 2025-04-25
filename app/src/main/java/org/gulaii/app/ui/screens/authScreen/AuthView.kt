@@ -28,11 +28,11 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import org.gulaii.app.ui.composables.CustomTextField
 import org.gulaii.app.ui.composables.PillButton
 import org.gulaii.app.ui.theme.GulaiiTheme
-import org.gulaii.app.ui.theme.PurpleGrey40
-import org.gulaii.app.ui.theme.PurpleGrey80
-import org.gulaii.app.ui.theme.SecondaryBlue
-import org.gulaii.app.ui.theme.SecondaryOrange
-import org.gulaii.app.ui.theme.SoftBlue
+import org.gulaii.app.ui.theme.PurpleGrey40 // FIXME: remove later
+import org.gulaii.app.ui.theme.PurpleGrey80 // FIXME: remove later
+import org.gulaii.app.ui.theme.SecondaryBlue // FIXME: remove later
+import org.gulaii.app.ui.theme.SecondaryOrange // FIXME: remove later
+import org.gulaii.app.ui.theme.SoftBlue // FIXME: remove later
 
 @Composable
 fun AuthScreenView(

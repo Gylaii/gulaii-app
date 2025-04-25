@@ -32,10 +32,10 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.launch
 import org.gulaii.app.R
 import org.gulaii.app.ui.composables.PillButton
-import org.gulaii.app.ui.theme.AccentBlue
-import org.gulaii.app.ui.theme.GulaiiTheme
-import org.gulaii.app.ui.theme.SecondaryBlue
-import org.gulaii.app.ui.theme.SoftBlue
+import org.gulaii.app.ui.theme.AccentBlue  // FIXME: remove later
+import org.gulaii.app.ui.theme.GulaiiTheme  // FIXME: remove later
+import org.gulaii.app.ui.theme.SecondaryBlue  // FIXME: remove later
+import org.gulaii.app.ui.theme.SoftBlue  // FIXME: remove later
 
 @Composable
 fun InitialScreenView(
