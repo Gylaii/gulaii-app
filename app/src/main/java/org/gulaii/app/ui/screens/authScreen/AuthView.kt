@@ -28,11 +28,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import org.gulaii.app.ui.composables.CustomTextField
 import org.gulaii.app.ui.composables.PillButton
 import org.gulaii.app.ui.theme.GulaiiTheme
-import org.gulaii.app.ui.theme.PurpleGrey40 // FIXME: remove later
-import org.gulaii.app.ui.theme.PurpleGrey80 // FIXME: remove later
-import org.gulaii.app.ui.theme.SecondaryBlue // FIXME: remove later
-import org.gulaii.app.ui.theme.SecondaryOrange // FIXME: remove later
-import org.gulaii.app.ui.theme.SoftBlue // FIXME: remove later
 
 @Composable
 fun AuthScreenView(
@@ -44,21 +39,21 @@ fun AuthScreenView(
 ) {
   val uiState by viewModel.uiState.collectAsState()
 
-
   Surface(
     modifier = modifier.fillMaxSize(),
-    color = SecondaryOrange
+    color = MaterialTheme.colorScheme.background
   ) {
 
     Column(
       modifier = modifier.padding(24.dp),
       horizontalAlignment = Alignment.CenterHorizontally,
     ) {
+
       Text(
         text = viewModel.headerText,
-        style = MaterialTheme.typography.bodySmall,
+        style = MaterialTheme.typography.headlineMedium,
         fontSize = 34.sp,
-        color = PurpleGrey40,
+        color = MaterialTheme.colorScheme.onBackground,
         modifier = Modifier.padding(top = 50.dp),
         textAlign = TextAlign.Center,
         lineHeight = 34.sp
@@ -67,7 +62,7 @@ fun AuthScreenView(
         text = viewModel.logoText,
         style = MaterialTheme.typography.bodyLarge,
         fontSize = 48.sp,
-        color = SecondaryBlue,
+        color = MaterialTheme.colorScheme.primary,
         modifier = Modifier.padding(top = 20.dp),
         textAlign = TextAlign.Center,
       )
@@ -106,6 +101,7 @@ fun AuthScreenView(
         modifier = Modifier.clickable(role = Role.Button) {
           onForgotPasswordClick()
         },
+        color = MaterialTheme.colorScheme.secondary
       )
 
       Spacer(Modifier.height(170.dp))
@@ -115,15 +111,14 @@ fun AuthScreenView(
           .width(200.dp)
           .height(50.dp),
         isEnabled = true,
-        buttonColor = ButtonDefaults.buttonColors(containerColor = SoftBlue),
+        buttonColor = ButtonDefaults.buttonColors(),
         clickAction = {}
       ) {
         Text(
           text = "Login",
           modifier = Modifier,
           style = MaterialTheme.typography.bodyLarge,
-          fontSize = 24.sp,
-          color = Color.Black
+          fontSize = 24.sp
         )
       }
 
@@ -133,8 +128,7 @@ fun AuthScreenView(
         text = "or",
         modifier = Modifier,
         style = MaterialTheme.typography.bodySmall,
-        fontSize = 20.sp,
-        color = Color.Black
+        fontSize = 20.sp
       )
 
       Spacer(Modifier.height(10.dp))
@@ -144,15 +138,14 @@ fun AuthScreenView(
           .width(200.dp)
           .height(50.dp),
         isEnabled = true,
-        buttonColor = ButtonDefaults.buttonColors(containerColor = PurpleGrey80),
+        buttonColor = ButtonDefaults.buttonColors(),
         clickAction = onSubmit
       ) {
         Text(
           text = "Google",
           modifier = Modifier,
           style = MaterialTheme.typography.bodyLarge,
-          fontSize = 24.sp,
-          color = Color.Black
+          fontSize = 24.sp
         )
       }
 
@@ -166,6 +159,7 @@ fun AuthScreenView(
         modifier = Modifier.clickable(role = Role.Button) {
           onHaveAnAccountLinkCLick()
         },
+        color = MaterialTheme.colorScheme.secondary
       )
 
     }
