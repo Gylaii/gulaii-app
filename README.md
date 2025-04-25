@@ -67,8 +67,6 @@ TODO
 
 ## 🤝&ensp;Contributing <a name="contributing"></a>
 
-Need help? See [`SUPPORT.md`](./SUPPORT.md).
-
 Hey! We're glad you're thinking about contributing to **Gulaii**! Feel free to pick an issue labeled as `good first issue` and ask any question you need. Some points might not be clear, and we are available to help you!
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/Gylaii/gulaii-app.
@@ -107,4 +105,4 @@ The project is available as open source under the terms of the [Apache 2.0 Licen
 
 ---
 
-*<p align="center">This project is published under [Apache 2.0](LICENSE).<br>A [Gulaii](https://github.com/Gylaii) project.<br>- :tada: -</p>*
+*<p align="center">This project is published under [Apache 2.0](LICENSE).<br>A [Gylaii](https://github.com/Gylaii) project.<br>- :tada: -</p>*
