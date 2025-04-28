@@ -105,10 +105,6 @@ fun AuthScreenView(
         }
       }
 
-
-
-
-
       CustomTextField(
         label = "Email",
         value = uiState.email,
@@ -165,7 +161,6 @@ fun AuthScreenView(
           fontSize = 24.sp
         )
       }
-
 
       Spacer(Modifier.height(10.dp))
 
