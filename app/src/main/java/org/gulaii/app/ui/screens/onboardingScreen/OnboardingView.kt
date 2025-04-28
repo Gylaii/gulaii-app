@@ -70,11 +70,9 @@ fun OnboardingView(
         .fillMaxSize()
         .padding(24.dp)
     ) {
-
       Column(
         modifier = Modifier.align(Alignment.Center),
         horizontalAlignment = Alignment.CenterHorizontally
-
       ) {
         AnimatedContent(
           targetState = page.header,
@@ -94,7 +92,6 @@ fun OnboardingView(
         }
 
         Spacer(Modifier.height(20.dp))
-
 
         AnimatedContent(
           targetState = page.body,
