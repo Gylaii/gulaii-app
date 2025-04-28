@@ -43,10 +43,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.launch
 import org.gulaii.app.R
 import org.gulaii.app.ui.composables.PillButton
-import org.gulaii.app.ui.theme.AccentBlue // FIXME: remove later
-import org.gulaii.app.ui.theme.GulaiiTheme // FIXME: remove later
-import org.gulaii.app.ui.theme.PrimaryBlue // FIXME: remove later
-import org.gulaii.app.ui.theme.SecondaryBlue // FIXME: remove later
+import org.gulaii.app.ui.theme.GulaiiTheme
 
 @SuppressLint("ResourceAsColor")
 @Composable
@@ -91,7 +88,7 @@ fun OnboardingView(
             text = header,
             style = MaterialTheme.typography.bodyLarge,
             fontSize = 26.sp,
-            color = AccentBlue,
+            color = MaterialTheme.colorScheme.primary,
             modifier = Modifier.padding(top = 300.dp)
           )
         }
@@ -113,7 +110,7 @@ fun OnboardingView(
               textIndent = TextIndent(firstLine = 22.sp)
             ),
             fontSize = 20.sp,
-            color = PrimaryBlue
+            color = MaterialTheme.colorScheme.secondary,
 
           )
         }
@@ -127,7 +124,7 @@ fun OnboardingView(
           .width(60.dp)
           .scale(scaleAnim.value),
         isEnabled = true,
-        buttonColor = ButtonDefaults.buttonColors(SecondaryBlue),
+        buttonColor = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.secondaryContainer),
         clickAction = {
           scope.launch {
             scaleAnim.animateTo(
@@ -149,7 +146,7 @@ fun OnboardingView(
           painter = painterResource(R.drawable.arrow_forward),
           contentDescription = stringResource(id = R.string.arrow_forward_description),
           modifier = Modifier.scale(2.5F),
-          tint = AccentBlue
+          tint = MaterialTheme.colorScheme.onSecondaryContainer
         )
       }
     }

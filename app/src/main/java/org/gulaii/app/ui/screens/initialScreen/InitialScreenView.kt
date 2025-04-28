@@ -32,10 +32,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.launch
 import org.gulaii.app.R
 import org.gulaii.app.ui.composables.PillButton
-import org.gulaii.app.ui.theme.AccentBlue  // FIXME: remove later
-import org.gulaii.app.ui.theme.GulaiiTheme  // FIXME: remove later
-import org.gulaii.app.ui.theme.SecondaryBlue  // FIXME: remove later
-import org.gulaii.app.ui.theme.SoftBlue  // FIXME: remove later
+import org.gulaii.app.ui.theme.GulaiiTheme
 
 @Composable
 fun InitialScreenView(
@@ -68,7 +65,7 @@ fun InitialScreenView(
           text = headerText,
           style = MaterialTheme.typography.bodyLarge,
           fontSize = 80.sp,
-          color = SoftBlue,
+          color = MaterialTheme.colorScheme.primary,
           modifier = Modifier.padding(top = 450.dp)
         )
       }
@@ -81,7 +78,7 @@ fun InitialScreenView(
           .width(200.dp)
           .scale(scaleAnim.value),
         isEnabled = true,
-        buttonColor = ButtonDefaults.buttonColors(SecondaryBlue),
+        buttonColor = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.secondaryContainer),
         clickAction = {
           scope.launch {
             scaleAnim.animateTo(
@@ -100,7 +97,7 @@ fun InitialScreenView(
       ) {
         Text(
           text = "Welcome!",
-          color = AccentBlue,
+          color = MaterialTheme.colorScheme.onSecondaryContainer,
           style = MaterialTheme.typography.bodyMedium,
           fontSize = 24.sp
         )
