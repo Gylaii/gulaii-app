@@ -63,7 +63,6 @@ fun CustomTextField(
   }
 }
 
-
 @Preview
 @Composable
 fun CustomTextFieldPreview() {

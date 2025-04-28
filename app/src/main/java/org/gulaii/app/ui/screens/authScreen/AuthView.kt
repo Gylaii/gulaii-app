@@ -45,9 +45,7 @@ fun AuthScreenView(
   Surface(
     modifier = modifier.fillMaxSize(),
     color = MaterialTheme.colorScheme.background,
-
     ) {
-
     Column(
       modifier = modifier.padding(24.dp),
       horizontalAlignment = Alignment.CenterHorizontally,
@@ -105,10 +103,6 @@ fun AuthScreenView(
         }
       }
 
-
-
-
-
       CustomTextField(
         label = "Email",
         value = uiState.email,
@@ -165,7 +159,6 @@ fun AuthScreenView(
           fontSize = 24.sp
         )
       }
-
 
       Spacer(Modifier.height(10.dp))
 
