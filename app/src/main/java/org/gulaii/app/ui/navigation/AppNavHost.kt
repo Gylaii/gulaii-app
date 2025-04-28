@@ -44,7 +44,6 @@ fun AppNavHost(
       composable<Screen.Auth> {
         AuthScreenView(
           onForgotPasswordClick = { navController.navigate(Screen.Recovery) },
-          onSubmit = { navController.navigate(Screen.Onboarding) }
         )
       }
       composable<Screen.Recovery> {
