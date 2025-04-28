@@ -1,10 +1,16 @@
 package org.gulaii.app.ui.screens.authScreen
 
+import AuthMode
 import AuthScreenViewModel
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -17,7 +23,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
@@ -34,38 +39,75 @@ fun AuthScreenView(
   modifier: Modifier = Modifier,
   viewModel: AuthScreenViewModel = viewModel(),
   onForgotPasswordClick: () -> Unit = {},
-  onHaveAnAccountLinkCLick: () -> Unit = {},
-  onSubmit: () -> Unit = {},
 ) {
   val uiState by viewModel.uiState.collectAsState()
 
   Surface(
     modifier = modifier.fillMaxSize(),
-    color = MaterialTheme.colorScheme.background
-  ) {
+    color = MaterialTheme.colorScheme.background,
+
+    ) {
 
     Column(
       modifier = modifier.padding(24.dp),
       horizontalAlignment = Alignment.CenterHorizontally,
     ) {
+      AnimatedContent(
+        targetState = uiState.mode,
+        transitionSpec = { fadeIn() togetherWith fadeOut() }
+      ) { mode ->
+        if (mode == AuthMode.SignIn) {
+          Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.fillMaxWidth()
+          ) {
+            Text(
+              text = "Welcome \nto",
+              style = MaterialTheme.typography.headlineMedium,
+              fontSize = 34.sp,
+              color = MaterialTheme.colorScheme.onBackground,
+              modifier = Modifier.padding(top = 50.dp),
+              textAlign = TextAlign.Center,
+              lineHeight = 34.sp
+            )
+            Text(
+              text = "Gulaii",
+              style = MaterialTheme.typography.bodyLarge,
+              fontSize = 48.sp,
+              color = MaterialTheme.colorScheme.primary,
+              modifier = Modifier.padding(top = 20.dp),
+              textAlign = TextAlign.Center
+            )
+          }
+        } else {
+          Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.fillMaxWidth()
+          ) {
+            Text(
+              text = "Create \naccount",
+              style = MaterialTheme.typography.headlineMedium,
+              fontSize = 34.sp,
+              color = MaterialTheme.colorScheme.onBackground,
+              modifier = Modifier.padding(top = 50.dp),
+              textAlign = TextAlign.Center,
+              lineHeight = 34.sp
+            )
+            Text(
+              text = "Gulaii",
+              style = MaterialTheme.typography.bodyLarge,
+              fontSize = 48.sp,
+              color = MaterialTheme.colorScheme.primary,
+              modifier = Modifier.padding(top = 20.dp),
+              textAlign = TextAlign.Center
+            )
+          }
+        }
+      }
 
-      Text(
-        text = viewModel.headerText,
-        style = MaterialTheme.typography.headlineMedium,
-        fontSize = 34.sp,
-        color = MaterialTheme.colorScheme.onBackground,
-        modifier = Modifier.padding(top = 50.dp),
-        textAlign = TextAlign.Center,
-        lineHeight = 34.sp
-      )
-      Text(
-        text = viewModel.logoText,
-        style = MaterialTheme.typography.bodyLarge,
-        fontSize = 48.sp,
-        color = MaterialTheme.colorScheme.primary,
-        modifier = Modifier.padding(top = 20.dp),
-        textAlign = TextAlign.Center,
-      )
+
+
+
 
       CustomTextField(
         label = "Email",
@@ -98,9 +140,10 @@ fun AuthScreenView(
         style = MaterialTheme.typography.bodySmall,
         textDecoration = TextDecoration.Underline,
         fontSize = 16.sp,
-        modifier = Modifier.clickable(role = Role.Button) {
-          onForgotPasswordClick()
-        },
+        modifier = Modifier
+          .clickable(role = Role.Button) {
+            onForgotPasswordClick()
+          },
         color = MaterialTheme.colorScheme.secondary
       )
 
@@ -111,16 +154,18 @@ fun AuthScreenView(
           .width(200.dp)
           .height(50.dp),
         isEnabled = true,
-        buttonColor = ButtonDefaults.buttonColors(),
-        clickAction = {}
+        buttonColor = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primaryContainer),
+        clickAction = {
+          viewModel.onPrimaryButtonClick()
+        }
       ) {
         Text(
-          text = "Login",
-          modifier = Modifier,
+          text = uiState.primaryButtonText,
           style = MaterialTheme.typography.bodyLarge,
           fontSize = 24.sp
         )
       }
+
 
       Spacer(Modifier.height(10.dp))
 
@@ -139,29 +184,29 @@ fun AuthScreenView(
           .height(50.dp),
         isEnabled = true,
         buttonColor = ButtonDefaults.buttonColors(),
-        clickAction = onSubmit
+        clickAction = { }
       ) {
         Text(
           text = "Google",
+          color = MaterialTheme.colorScheme.onPrimary,
           modifier = Modifier,
           style = MaterialTheme.typography.bodyLarge,
           fontSize = 24.sp
         )
       }
 
-      Spacer(Modifier.height(25.dp))
+      Spacer(Modifier.height(50.dp))
 
       Text(
-        text = "Already have an account?",
+        text = if (uiState.mode == AuthMode.SignIn)
+          "Need a new account?" else "Already have an account?",
         style = MaterialTheme.typography.bodySmall,
         textDecoration = TextDecoration.Underline,
         fontSize = 16.sp,
-        modifier = Modifier.clickable(role = Role.Button) {
-          onHaveAnAccountLinkCLick()
-        },
-        color = MaterialTheme.colorScheme.secondary
+        color = MaterialTheme.colorScheme.secondary,
+        modifier = Modifier
+          .clickable { viewModel.toggleMode() }
       )
-
     }
   }
 }
