@@ -14,7 +14,6 @@ class AuthRepository(
 ) {
   private val TOKEN = stringPreferencesKey("jwt")
 
-  /** Токен сразу после логина/регистрации */
   @Volatile var cachedToken: String? = null
     private set
 
@@ -40,5 +39,12 @@ class AuthRepository(
   private suspend fun saveToken(token: String) {
     cachedToken = token
     context.dataStore.edit { it[TOKEN] = token }
+  }
+
+  suspend fun clearToken() {
+    cachedToken = null
+    context.dataStore.edit { prefs ->
+      prefs.remove(TOKEN)
+    }
   }
 }

@@ -19,13 +19,11 @@ class ProfileViewModel : ViewModel() {
 
   init {
     viewModelScope.launch {
-      /* ждём, пока в DataStore появится токен;
-         если его ещё нет — просто выходим, ничего не ломаем */
       val token = authRepo.currentToken()
       if (token.isNullOrBlank()) return@launch
 
       try {
-        val m = userRepo.getMetrics()          // уже с Authorization‑заголовком
+        val m = userRepo.getMetrics()
         _ui.update {
           it.copy(
             height    = m.height?.toString().orEmpty(),
@@ -45,22 +43,30 @@ class ProfileViewModel : ViewModel() {
   fun onGoal(g: String)      = _ui.update { it.copy(goal = g) }
   fun onActivity(a: String)  = _ui.update { it.copy(activity = a) }
 
+  fun toggleEditing() = _ui.update { it.copy(isEditing = !it.isEditing) }
+
+  fun logout(onDone: () -> Unit) = viewModelScope.launch {
+    authRepo.clearToken()
+    onDone()
+  }
+
   fun save(onSaved: () -> Unit) = viewModelScope.launch {
     _ui.update { it.copy(isLoading = true, error = null) }
 
     try {
-      userRepo.setMetrics(
-        ProfileMetrics(
-          height        = _ui.value.height.toIntOrNull(),
-          weight        = _ui.value.weight.toIntOrNull(),
-          goal          = _ui.value.goal,
-          activityLevel = _ui.value.activity
-        )
-      )
-      _ui.update { it.copy(isLoading = false, saved = true) }
+      userRepo.setMetrics( ProfileMetrics(
+        height        = _ui.value.height.toIntOrNull(),
+        weight        = _ui.value.weight.toIntOrNull(),
+        goal          = _ui.value.goal,
+        activityLevel = _ui.value.activity
+      ))
+      _ui.update { it.copy(isLoading = false,
+        saved = true,
+        isEditing = false) }      // ← выключаем режим правки
       onSaved()
     } catch (e: Exception) {
-      _ui.update { it.copy(isLoading = false, error = e.message ?: "Network error") }
+      _ui.update { it.copy(isLoading = false,
+        error = e.message ?: "Network error") }
     }
   }
 }
