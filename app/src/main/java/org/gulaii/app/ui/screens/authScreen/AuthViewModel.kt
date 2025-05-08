@@ -18,10 +18,8 @@ data class AuthUiState(
 }
 
 class AuthScreenViewModel : ViewModel() {
-
   private val _uiState = MutableStateFlow(AuthUiState())
   val uiState: StateFlow<AuthUiState> = _uiState.asStateFlow()
-
 
   fun onEmailChange(newEmail: String) =
     _uiState.update { it.copy(email = newEmail) }
@@ -32,7 +30,6 @@ class AuthScreenViewModel : ViewModel() {
   fun toggleMode() = _uiState.update {
     it.copy(mode = if (it.mode == AuthMode.SignIn) AuthMode.SignUp else AuthMode.SignIn)
   }
-
 
   fun onPrimaryButtonClick() = viewModelScope.launch {
     when (_uiState.value.mode) {

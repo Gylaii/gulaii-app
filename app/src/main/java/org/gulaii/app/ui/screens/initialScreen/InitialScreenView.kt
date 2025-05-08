@@ -32,10 +32,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.launch
 import org.gulaii.app.R
 import org.gulaii.app.ui.composables.PillButton
-import org.gulaii.app.ui.theme.AccentBlue
 import org.gulaii.app.ui.theme.GulaiiTheme
-import org.gulaii.app.ui.theme.SecondaryBlue
-import org.gulaii.app.ui.theme.SoftBlue
 
 @Composable
 fun InitialScreenView(
@@ -49,10 +46,10 @@ fun InitialScreenView(
 
   Scaffold(modifier = modifier.fillMaxSize()) { innerPadding ->
     Image(
-      painter = painterResource(id = R.drawable.initial_image), // переименуйте файл, как нужно
-      contentDescription = null,      // декоративное изображение
+      painter = painterResource(id = R.drawable.initial_image),
+      contentDescription = null,
       modifier = Modifier.fillMaxSize(),
-      contentScale = ContentScale.Crop // растягиваем по всему экрану
+      contentScale = ContentScale.Crop
     )
     Box(
       modifier = Modifier
@@ -68,7 +65,7 @@ fun InitialScreenView(
           text = headerText,
           style = MaterialTheme.typography.bodyLarge,
           fontSize = 80.sp,
-          color = SoftBlue,
+          color = MaterialTheme.colorScheme.primary,
           modifier = Modifier.padding(top = 450.dp)
         )
       }
@@ -81,7 +78,7 @@ fun InitialScreenView(
           .width(200.dp)
           .scale(scaleAnim.value),
         isEnabled = true,
-        buttonColor = ButtonDefaults.buttonColors(SecondaryBlue),
+        buttonColor = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.secondaryContainer),
         clickAction = {
           scope.launch {
             scaleAnim.animateTo(
@@ -100,7 +97,7 @@ fun InitialScreenView(
       ) {
         Text(
           text = "Welcome!",
-          color = AccentBlue,
+          color = MaterialTheme.colorScheme.onSecondaryContainer,
           style = MaterialTheme.typography.bodyMedium,
           fontSize = 24.sp
         )
