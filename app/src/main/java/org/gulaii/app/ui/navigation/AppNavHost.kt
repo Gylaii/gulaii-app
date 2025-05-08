@@ -9,6 +9,7 @@ import androidx.navigation.compose.navigation
 import org.gulaii.app.ui.screens.authScreen.AuthScreenView
 import org.gulaii.app.ui.screens.initialScreen.InitialScreenView
 import org.gulaii.app.ui.screens.onboardingScreen.OnboardingView
+import org.gulaii.app.ui.screens.otpScreen.OtpView
 import org.gulaii.app.ui.screens.recoveryScreen.RecoveryView
 
 @Composable
@@ -48,9 +49,15 @@ fun AppNavHost(
       }
       composable<Screen.Recovery> {
         RecoveryView(
+          onReturnClick = { navController.navigate(Screen.Auth) },
+          onNextClick = { navController.navigate(Screen.Otp) }
         )
       }
-
+      composable<Screen.Otp> {
+        OtpView(
+          onVerifyClick = { navController.navigate(Screen.Auth) }
+        )
+      }
     }
   }
 }
