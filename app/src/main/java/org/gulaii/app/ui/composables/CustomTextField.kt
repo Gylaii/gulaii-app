@@ -34,7 +34,7 @@ fun CustomTextField(
   onTrailingIconClick: () -> Unit = {},
   trailingIcon: Painter? = null,
   cornerRadius: Dp = 12.dp,
-  visualTransformation: VisualTransformation = None,            // ← NEW
+  visualTransformation: VisualTransformation = None,
   keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
 ) {
   Column(modifier = modifier) {

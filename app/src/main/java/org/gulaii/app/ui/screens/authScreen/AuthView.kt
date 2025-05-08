@@ -118,7 +118,7 @@ fun AuthScreenView(
                 value = uiState.email,
                 onValueChange = viewModel::onEmailChange,
                 modifier = Modifier.padding(top = 50.dp),
-                leadingIcon = painterResource(R.drawable.outline_email_24),   // <-- just Painter
+                leadingIcon = painterResource(R.drawable.outline_email_24),
                 onTrailingIconClick = { },
                 trailingIcon = null,
                 cornerRadius = 12.dp,

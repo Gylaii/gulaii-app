@@ -46,10 +46,10 @@ fun InitialScreenView(
 
   Scaffold(modifier = modifier.fillMaxSize()) { innerPadding ->
     Image(
-      painter = painterResource(id = R.drawable.initial_image), // переименуйте файл, как нужно
-      contentDescription = null,      // декоративное изображение
+      painter = painterResource(id = R.drawable.initial_image),
+      contentDescription = null,
       modifier = Modifier.fillMaxSize(),
-      contentScale = ContentScale.Crop // растягиваем по всему экрану
+      contentScale = ContentScale.Crop
     )
     Box(
       modifier = Modifier

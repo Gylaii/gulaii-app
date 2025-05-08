@@ -9,6 +9,7 @@ import androidx.navigation.compose.navigation
 import org.gulaii.app.ui.screens.authScreen.AuthScreenView
 import org.gulaii.app.ui.screens.initialScreen.InitialScreenView
 import org.gulaii.app.ui.screens.onboardingScreen.OnboardingView
+import org.gulaii.app.ui.screens.otpScreen.OtpView
 import org.gulaii.app.ui.screens.recoveryScreen.RecoveryView
 
 @Composable
@@ -46,9 +47,15 @@ fun AppNavHost(
           onForgotPasswordClick = { navController.navigate(Screen.Recovery) },
         )
       }
-      composable<Screen.Recovery> {
+      composable<Recovery> {
         RecoveryView(
+          onReturnClick = { navController.navigate(Screen.Auth) }
         )
+        composable<Otp> {
+          OtpView(
+            onVerifyClick = { navController.navigate(Screen.Auth) }
+          )
+        }
       }
     }
   }
