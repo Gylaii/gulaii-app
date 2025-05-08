@@ -15,12 +15,8 @@ class OtpViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(OtpUiState())
     val uiState: StateFlow<OtpUiState> = _uiState
 
-  fun onCodeChange(newCode: String) {
-    _uiState.update {
-      it.copy(
-        code = newCode,
-        isClickable = newCode.length == 4 && newCode.all { ch -> ch.isDigit() }
-      )
-    }
+  fun checkIfOtpComplete(otpValues: List<String>) {
+    val isComplete = otpValues.all { it.length == 1 }
+    _uiState.update { it.copy(isClickable = isComplete) }
   }
 }

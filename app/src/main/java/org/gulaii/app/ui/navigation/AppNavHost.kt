@@ -49,15 +49,16 @@ fun AppNavHost(
           onAuthSuccess = { navController.navigate(Screen.Profile) { popUpTo(AuthGraph) { inclusive = true } } }
         )
       }
-      composable<Recovery> {
+      composable<Screen.Recovery> {
         RecoveryView(
-          onReturnClick = { navController.navigate(Screen.Auth) }
+          onReturnClick = { navController.navigate(Screen.Auth) },
+          onNextClick = { navController.navigate(Screen.Otp) }
         )
-        composable<Otp> {
-          OtpView(
-            onVerifyClick = { navController.navigate(Screen.Auth) }
-          )
-        }
+      }
+      composable<Screen.Otp> {
+        OtpView(
+          onVerifyClick = { navController.navigate(Screen.Auth) }
+        )
       }
     }
 
