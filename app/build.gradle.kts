@@ -96,4 +96,16 @@ dependencies {
   implementation("androidx.compose.runtime:runtime-rxjava2")
 // https://mvnrepository.com/artifact/org.jetbrains.kotlinx/kotlinx-serialization-json-jvm
   implementation("org.jetbrains.kotlinx:kotlinx-serialization-json-jvm:1.8.0")
+
+  // Retrofit core
+  implementation("com.squareup.retrofit2:retrofit:2.9.0")
+
+  implementation("androidx.datastore:datastore-preferences:1.1.0")
+
+  // Kotlinx-Serialization конвертер для Retrofit
+  implementation("com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:0.8.0")
+
+  // OkHttp + логирующий интерцептор
+  implementation("com.squareup.okhttp3:okhttp:4.11.0")
+  implementation("com.squareup.okhttp3:logging-interceptor:4.11.0")
 }
