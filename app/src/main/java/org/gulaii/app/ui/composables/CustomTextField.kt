@@ -36,6 +36,7 @@ fun CustomTextField(
   cornerRadius: Dp = 12.dp,
   visualTransformation: VisualTransformation = None,
   keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+  enabled: Boolean = true,
 ) {
   Column(modifier = modifier) {
     OutlinedTextField(
@@ -65,8 +66,9 @@ fun CustomTextField(
       shape = RoundedCornerShape(cornerRadius),
       modifier = Modifier.fillMaxWidth(),
       visualTransformation = visualTransformation,
-      keyboardOptions = keyboardOptions
-
+      keyboardOptions = keyboardOptions,
+      enabled = enabled,
+      readOnly = !enabled,
     )
   }
 }

@@ -8,17 +8,13 @@ import androidx.compose.ui.unit.sp
 import org.gulaii.app.R.font.futura_heavy
 import org.gulaii.app.R.font.futura_light
 import org.gulaii.app.R.font.futura_medium
+import org.gulaii.app.R.font.futura_bold
 
 val FuturaFamily = FontFamily(
     Font(futura_heavy, weight = FontWeight.Bold),
     Font(futura_medium, weight = FontWeight.Medium),
     Font(futura_light, weight = FontWeight.Light)
 )
-
-import org.gulaii.app.R.font.futura_bold
-import org.gulaii.app.R.font.futura_heavy
-import org.gulaii.app.R.font.futura_medium
-import org.gulaii.app.R.font.futura_light
 
 val displayFontFamily = FontFamily(
     Font(futura_bold, weight = FontWeight.Bold),
