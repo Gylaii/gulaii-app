@@ -108,7 +108,6 @@ fun OnboardingView(
             ),
             fontSize = 20.sp,
             color = MaterialTheme.colorScheme.secondary,
-
           )
         }
       }

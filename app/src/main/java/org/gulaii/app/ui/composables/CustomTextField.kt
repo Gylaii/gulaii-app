@@ -66,6 +66,7 @@ fun CustomTextField(
       modifier = Modifier.fillMaxWidth(),
       visualTransformation = visualTransformation,
       keyboardOptions = keyboardOptions
+
     )
   }
 }

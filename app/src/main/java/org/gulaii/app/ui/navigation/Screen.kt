@@ -15,3 +15,4 @@ sealed interface Screen {
 @Serializable data object AuthGraph
 @Serializable data object Recovery
 @Serializable data object Otp
+
