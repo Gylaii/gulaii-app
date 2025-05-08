@@ -10,6 +10,7 @@ import org.gulaii.app.ui.screens.authScreen.AuthScreenView
 import org.gulaii.app.ui.screens.initialScreen.InitialScreenView
 import org.gulaii.app.ui.screens.onboardingScreen.OnboardingView
 import org.gulaii.app.ui.screens.otpScreen.OtpView
+import org.gulaii.app.ui.screens.profile.ProfileView
 import org.gulaii.app.ui.screens.recoveryScreen.RecoveryView
 
 @Composable
@@ -45,6 +46,7 @@ fun AppNavHost(
       composable<Screen.Auth> {
         AuthScreenView(
           onForgotPasswordClick = { navController.navigate(Screen.Recovery) },
+          onAuthSuccess = { navController.navigate(Screen.Profile) { popUpTo(AuthGraph) { inclusive = true } } }
         )
       }
       composable<Recovery> {
@@ -57,6 +59,13 @@ fun AppNavHost(
           )
         }
       }
+    }
+
+    // Профиль
+    composable<Screen.Profile> {
+      ProfileView(
+        onSaved = { /* при желании вернуться на Home */ }
+      )
     }
   }
 }

@@ -8,6 +8,7 @@ sealed interface Screen {
   @Serializable data object Auth      : Screen
   @Serializable data object Recovery : Screen
   @Serializable data object Otp: Screen
+  @Serializable data object Profile : Screen
 }
 
 @Serializable data object InitialGraph
@@ -15,3 +16,4 @@ sealed interface Screen {
 @Serializable data object AuthGraph
 @Serializable data object Recovery
 @Serializable data object Otp
+@Serializable data object Profile
