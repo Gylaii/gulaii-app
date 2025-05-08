@@ -2,16 +2,12 @@ package org.gulaii.app.ui.screens.otpScreen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -19,18 +15,19 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import org.gulaii.app.R
+import org.gulaii.app.ui.composables.OtpInputTextField
 import org.gulaii.app.ui.composables.PillButton
 import org.gulaii.app.ui.theme.GulaiiTheme
 
@@ -42,8 +39,8 @@ fun OtpView(
   onVerifyClick: () -> Unit = {},
 ) {
   val uiState by viewModel.uiState.collectAsState()
-  val focusManager = LocalFocusManager.current
-
+  val otpValues =
+    remember { mutableStateListOf<String>("", "", "", "") }
 
   val isDark = isSystemInDarkTheme()
   val otpImage = if (isDark) {
@@ -51,8 +48,6 @@ fun OtpView(
   } else {
     R.drawable.otp_dark_image
   }
-
-
 
   Surface(
     modifier = modifier.fillMaxSize(),
@@ -93,37 +88,25 @@ fun OtpView(
         modifier = Modifier.padding(top = 20.dp),
       )
 
-      BasicTextField(
-        value = uiState.code,
-        onValueChange = { newCode ->
-          if (newCode.length <= 4) {
-            viewModel.onCodeChange(newCode)
+      Spacer(Modifier.height(100.dp))
 
-            if (newCode.length == 4) {
-              focusManager.clearFocus()
-            }
-          }
+      OtpInputTextField(
+        otpValues = otpValues,
+        otpLength = codeLength,
+        onOtpInputComplete = {
+          viewModel.checkIfOtpComplete(otpValues)
         },
-        modifier = Modifier.padding(16.dp),
-        keyboardOptions = KeyboardOptions(
-          keyboardType = KeyboardType.NumberPassword,
-        ),
-        decorationBox = { innerTextField ->
-          Row(
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalAlignment = Alignment.CenterVertically
-          ) {
-            for (i in 0 until codeLength) {
-            }
-          }
-        }
-      )
+        onUpdateOtpValuesByIndex = { index, value ->
+          otpValues[index] = value
+          viewModel.checkIfOtpComplete(otpValues)
+        })
 
       Spacer(Modifier.height(50.dp))
+
       PillButton(
         isEnabled = uiState.isClickable,
         buttonColor = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primaryContainer),
-        clickAction = onVerifyClick,
+        clickAction = { onVerifyClick() },
         modifier = Modifier
           .width(140.dp)
           .height(56.dp)

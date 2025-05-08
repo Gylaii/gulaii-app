@@ -47,15 +47,16 @@ fun AppNavHost(
           onForgotPasswordClick = { navController.navigate(Screen.Recovery) },
         )
       }
-      composable<Recovery> {
+      composable<Screen.Recovery> {
         RecoveryView(
-          onReturnClick = { navController.navigate(Screen.Auth) }
+          onReturnClick = { navController.navigate(Screen.Auth) },
+          onNextClick = { navController.navigate(Screen.Otp) }
         )
-        composable<Otp> {
-          OtpView(
-            onVerifyClick = { navController.navigate(Screen.Auth) }
-          )
-        }
+      }
+      composable<Screen.Otp> {
+        OtpView(
+          onVerifyClick = { navController.navigate(Screen.Auth) }
+        )
       }
     }
   }
