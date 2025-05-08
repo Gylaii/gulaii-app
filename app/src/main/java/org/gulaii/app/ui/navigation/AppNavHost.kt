@@ -65,7 +65,7 @@ fun AppNavHost(
     // Профиль
     composable<Screen.Profile> {
       ProfileView(
-        onSaved = { /* при желании вернуться на Home */ }
+        nav = navController
       )
     }
   }

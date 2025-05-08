@@ -7,5 +7,6 @@ data class ProfileUiState(
   val activity: String = "",
   val isLoading: Boolean = false,
   val saved: Boolean = false,
-  val error: String? = null
+  val error: String? = null,
+  val isEditing: Boolean = false
 )
