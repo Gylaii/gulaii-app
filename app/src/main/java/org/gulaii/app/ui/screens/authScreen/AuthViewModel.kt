@@ -20,7 +20,7 @@ data class AuthUiState(
   val isLoading: Boolean = false,
   val error: String? = null
 ) {
-  val primaryButtonText get() = if (mode == AuthMode.SignIn) "Login" else "Register"
+  val primaryButtonText get() = if (mode == AuthMode.SignIn) "Войти" else "Регистрация"
 }
 
 sealed interface AuthEvent {

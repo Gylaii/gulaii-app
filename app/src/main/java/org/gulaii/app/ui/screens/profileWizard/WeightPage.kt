@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -24,20 +25,35 @@ fun WeightPage(
   val weight by vm.weight.collectAsState()
 
   WizardScaffold("Введите вес") {
+    Spacer(Modifier.height(24.dp))
+
     CustomTextField(
-      label = "Weight (kg)",
+      label = "Вес (кг)",
       value = weight,
       onValueChange = vm::setWeight,
-      keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+      keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+      modifier = Modifier
+        .fillMaxWidth()
+        .height(72.dp)
     )
-    Spacer(Modifier.height(32.dp))
+
+    Spacer(Modifier.height(40.dp))
+
     PillButton(
+      modifier = Modifier
+        .fillMaxWidth()
+        .height(56.dp),
       isEnabled = weight.toIntOrNull() != null,
-      buttonColor = ButtonDefaults.buttonColors(),
-      modifier = Modifier.fillMaxWidth(),
+      buttonColor = ButtonDefaults.buttonColors(
+        containerColor = MaterialTheme.colorScheme.primary
+      ),
       clickAction = onNext
     ) {
-      Text("Next")
+      Text(
+        text = "Далее",
+        style = MaterialTheme.typography.titleMedium,
+        color = MaterialTheme.colorScheme.onPrimary
+      )
     }
   }
 }

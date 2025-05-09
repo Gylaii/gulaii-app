@@ -96,10 +96,10 @@ fun InitialScreenView(
         }
       ) {
         Text(
-          text = "Welcome!",
+          text = "Начать",
           color = MaterialTheme.colorScheme.onSecondaryContainer,
           style = MaterialTheme.typography.bodyMedium,
-          fontSize = 24.sp
+          fontSize = 25.sp
         )
       }
     }

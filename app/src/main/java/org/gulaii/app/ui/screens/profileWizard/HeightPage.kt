@@ -18,19 +18,36 @@ fun HeightPage(
 ) {
   val value by vm.height.collectAsState()
   WizardScaffold("Введите рост") {
+    Spacer(Modifier.height(24.dp))
+
     CustomTextField(
-      label = "Height (cm)",
+      label = "Рост (см)",
       value = value,
       onValueChange = vm::setHeight,
-      keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+      keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+      modifier = Modifier
+        .fillMaxWidth()
+        .height(72.dp)
     )
-    Spacer(Modifier.height(32.dp))
+
+    Spacer(Modifier.height(40.dp))
+
     PillButton(
+      modifier = Modifier
+        .fillMaxWidth()
+        .height(56.dp),
       isEnabled = value.toIntOrNull() != null,
-      buttonColor = ButtonDefaults.buttonColors(),
-      modifier = Modifier.fillMaxWidth(),
+      buttonColor = ButtonDefaults.buttonColors(
+        containerColor = MaterialTheme.colorScheme.primary
+      ),
       clickAction = onNext
-    ) { Text("Next") }
+    ) {
+      Text(
+        text = "Далее",
+        style = MaterialTheme.typography.titleMedium,
+        color = MaterialTheme.colorScheme.onPrimary
+      )
+    }
   }
 }
 

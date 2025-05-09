@@ -73,45 +73,52 @@ fun AuthScreenView(
         targetState = uiState.mode,
         transitionSpec = { fadeIn() togetherWith fadeOut() }
       ) { mode ->
-        if (mode == AuthMode.SignIn) {
-          Text(
-            text = "Welcome \nto",
-            style = MaterialTheme.typography.headlineMedium,
-            fontSize = 34.sp,
-            color = MaterialTheme.colorScheme.onBackground,
-            textAlign = TextAlign.Center,
-            lineHeight = 34.sp,
-            modifier = Modifier
-              .fillMaxWidth()
-              .padding(top = 50.dp)
-          )
-        } else {
-          Text(
-            text = "Create \naccount",
-            style = MaterialTheme.typography.headlineMedium,
-            fontSize = 34.sp,
-            color = MaterialTheme.colorScheme.onBackground,
-            textAlign = TextAlign.Center,
-            lineHeight = 34.sp,
-            modifier = Modifier
-              .fillMaxWidth()
-              .padding(top = 50.dp)
-          )
+        Column(
+          modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 60.dp),
+          horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+          if (mode == AuthMode.SignIn) {
+            Text(
+              text = "Добро пожаловать",
+              style = MaterialTheme.typography.headlineSmall,
+              fontSize = 32.sp,
+              color = MaterialTheme.colorScheme.onBackground,
+              textAlign = TextAlign.Center
+            )
+            Spacer(Modifier.height(8.dp))
+            Text(
+              text = "в Gulaii",
+              style = MaterialTheme.typography.headlineSmall,
+              fontSize = 32.sp,
+              color = MaterialTheme.colorScheme.primary,
+              textAlign = TextAlign.Center
+            )
+          } else {
+            Text(
+              text = "Создайте",
+              style = MaterialTheme.typography.headlineSmall,
+              fontSize = 32.sp,
+              color = MaterialTheme.colorScheme.onBackground,
+              textAlign = TextAlign.Center
+            )
+            Spacer(Modifier.height(8.dp))
+            Text(
+              text = "аккаунт",
+              style = MaterialTheme.typography.headlineSmall,
+              fontSize = 32.sp,
+              color = MaterialTheme.colorScheme.primary,
+              textAlign = TextAlign.Center
+            )
+          }
         }
-        Text(
-          text = "Gulaii",
-          style = MaterialTheme.typography.bodyLarge,
-          fontSize = 48.sp,
-          color = MaterialTheme.colorScheme.primary,
-          textAlign = TextAlign.Center,
-          modifier = Modifier.fillMaxWidth()
-        )
       }
 
       Spacer(Modifier.height(50.dp))
 
       CustomTextField(
-        label = "Email",
+        label = "Электронная почта",
         value = uiState.email,
         onValueChange = viewModel::onEmailChange,
         leadingIcon = painterResource(R.drawable.outline_email_24)
@@ -120,7 +127,7 @@ fun AuthScreenView(
       Spacer(Modifier.height(20.dp))
 
       CustomTextField(
-        label = "Password",
+        label = "Пароль",
         value = uiState.password,
         onValueChange = viewModel::onPasswordChange,
         leadingIcon = painterResource(R.drawable.outline_lock_24),
@@ -141,7 +148,7 @@ fun AuthScreenView(
       Spacer(Modifier.height(25.dp))
 
       Text(
-        text = "Forgot your password?",
+        text = "Забыли ваш пароль?",
         style = MaterialTheme.typography.bodySmall,
         textDecoration = TextDecoration.Underline,
         fontSize = 16.sp,
@@ -178,7 +185,7 @@ fun AuthScreenView(
 
       Spacer(Modifier.height(10.dp))
 
-      Text("or", style = MaterialTheme.typography.bodySmall, fontSize = 20.sp)
+      Text("или", style = MaterialTheme.typography.bodySmall, fontSize = 20.sp)
       Spacer(Modifier.height(10.dp))
       PillButton(
         modifier = Modifier
@@ -200,7 +207,7 @@ fun AuthScreenView(
 
       Text(
         text = if (uiState.mode == AuthMode.SignIn)
-          "Need a new account?" else "Already have an account?",
+          "Нужен новый аккаунт?" else "Уже имеете аккаунт?",
         style = MaterialTheme.typography.bodySmall,
         textDecoration = TextDecoration.Underline,
         fontSize = 16.sp,

@@ -8,6 +8,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.*
@@ -28,27 +29,34 @@ fun ActivityPage(
   var expanded by remember { mutableStateOf(false) }
 
   WizardScaffold("Уровень активности") {
+    Spacer(Modifier.height(24.dp))
+
     ExposedDropdownMenuBox(
       expanded = expanded,
-      onExpandedChange = { expanded = !expanded }
+      onExpandedChange = { expanded = !expanded },
+      modifier = Modifier
+        .fillMaxWidth()
+        .height(72.dp)
     ) {
       TextField(
         value = act,
         onValueChange = {},
         readOnly = true,
-        label = { Text("Activity") },
+        label = { Text("Выберите активность") },
         trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded) },
-        modifier = Modifier.menuAnchor()
+        modifier = Modifier
+          .fillMaxWidth()
+          .menuAnchor()
       )
       ExposedDropdownMenu(
         expanded = expanded,
         onDismissRequest = { expanded = false }
       ) {
-        activities.forEach { a ->
+        activities.forEach { option ->
           DropdownMenuItem(
-            text = { Text(a) },
+            text = { Text(option) },
             onClick = {
-              vm.setActivity(a)
+              vm.setActivity(option)
               expanded = false
             }
           )
@@ -56,15 +64,23 @@ fun ActivityPage(
       }
     }
 
-    Spacer(Modifier.height(32.dp))
+    Spacer(Modifier.height(40.dp))
 
     PillButton(
+      modifier = Modifier
+        .fillMaxWidth()
+        .height(56.dp),
       isEnabled = act.isNotBlank(),
-      buttonColor = ButtonDefaults.buttonColors(),
-      modifier = Modifier.fillMaxWidth(),
+      buttonColor = ButtonDefaults.buttonColors(
+        containerColor = MaterialTheme.colorScheme.primary
+      ),
       clickAction = onNext
     ) {
-      Text("Next")
+      Text(
+        text = "Далее",
+        style = MaterialTheme.typography.titleMedium,
+        color = MaterialTheme.colorScheme.onPrimary
+      )
     }
   }
 }
