@@ -19,24 +19,21 @@ class ProfileViewModel : ViewModel() {
 
   init {
     viewModelScope.launch {
-      val token = authRepo.currentToken()
-      if (token.isNullOrBlank()) return@launch
+      userRepo.metrics.collect { m -> _ui.update { it.from(m) } }
+    }
 
-      try {
-        val m = userRepo.getMetrics()
-        _ui.update {
-          it.copy(
-            height    = m.height?.toString().orEmpty(),
-            weight    = m.weight?.toString().orEmpty(),
-            goal      = m.goal.orEmpty(),
-            activity  = m.activityLevel.orEmpty()
-          )
-        }
-      } catch (e: Exception) {
-        _ui.update { it.copy(error = e.message ?: "Network error") }
-      }
+    viewModelScope.launch {
+      runCatching { userRepo.fetchMetrics() }
+        .onFailure { e -> _ui.update { it.copy(error = e.message) } }
     }
   }
+
+  private fun ProfileUiState.from(m: ProfileMetrics) = copy(
+    height   = m.height?.toString().orEmpty(),
+    weight   = m.weight?.toString().orEmpty(),
+    goal     = m.goal.orEmpty(),
+    activity = m.activityLevel.orEmpty()
+  )
 
   fun onHeight(h: String)    = _ui.update { it.copy(height = h) }
   fun onWeight(w: String)    = _ui.update { it.copy(weight = w) }
@@ -62,7 +59,7 @@ class ProfileViewModel : ViewModel() {
       ))
       _ui.update { it.copy(isLoading = false,
         saved = true,
-        isEditing = false) }      // ← выключаем режим правки
+        isEditing = false) }
       onSaved()
     } catch (e: Exception) {
       _ui.update { it.copy(isLoading = false,
