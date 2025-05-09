@@ -2,11 +2,7 @@ package org.gulaii.app.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val PrimaryBlue = Color(0xFF4D55CC) // FIXME: remove later
-val SecondaryBlue = Color(0xFF60B5FF) // FIXME: remove later
-val SoftBlue = Color(0xFFAFDDFF) // FIXME: remove later
-val AccentBlue = Color(0xFF261FB3) // FIXME: remove later
-
+val roseLight = Color(0xFFECBBC0)
 val primaryLight = Color(0xFF9E3D00)
 val onPrimaryLight = Color(0xFFFFFFFF)
 val primaryContainerLight = Color(0xFFC64F00)
