@@ -22,6 +22,7 @@ import org.gulaii.app.R
 import org.gulaii.app.ui.composables.CustomTextField
 import org.gulaii.app.ui.composables.PillButton
 import org.gulaii.app.ui.navigation.Screen
+import org.gulaii.app.ui.navigation.BottomNavBar
 
 private val avatars = listOf(
   R.drawable.avatar1, R.drawable.avatar2,
@@ -39,7 +40,8 @@ fun ProfileView(
   val snackbar = remember { SnackbarHostState() }
 
   Scaffold(
-    snackbarHost = { SnackbarHost(snackbar) }
+    snackbarHost = { SnackbarHost(snackbar) },
+    bottomBar    = { BottomNavBar(nav, Screen.Profile) }
   ) { pad ->
     Box(Modifier
       .padding(pad)
