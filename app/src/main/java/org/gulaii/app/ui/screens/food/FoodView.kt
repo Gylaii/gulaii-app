@@ -11,15 +11,18 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import org.gulaii.app.R
-import java.time.LocalDate
 import org.gulaii.app.ui.util.plus
 import org.gulaii.app.ui.navigation.BottomNavBar
 import org.gulaii.app.ui.navigation.Screen
+import org.gulaii.app.ui.util.ActivityCard
+import org.gulaii.app.ui.util.dateLabel
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 data class FoodEntry(
   val title: String,
   val calories: Int,
-  val date: LocalDate,
+  val dateTime: LocalDateTime,
   val icon: Int = R.drawable.ic_food2
 )
 
@@ -30,6 +33,8 @@ fun FoodView(
   meals: List<FoodEntry> = remember { demoFood }
 ) {
   val cs = MaterialTheme.colorScheme
+
+  val timeFormatter = DateTimeFormatter.ofPattern("HH:mm")
   Scaffold(
     floatingActionButton = {
       FloatingActionButton(onClick = onAdd, containerColor = cs.primaryContainer) {
@@ -42,18 +47,24 @@ fun FoodView(
         contentPadding = paddingValues + PaddingValues(horizontal = 24.dp, vertical = 16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
       ) {
+
         meals
-          .groupBy { it.date }
+          .groupBy { it.dateTime.toLocalDate() }
           .toSortedMap(compareByDescending { it })
           .forEach { (date, list) ->
             item {
-              Text(dateLabel(date), style = MaterialTheme.typography.headlineSmall)
+              Text(
+                text = dateLabel(date),
+                style = MaterialTheme.typography.headlineSmall
+              )
             }
             items(list) { f ->
-              org.gulaii.app.ui.screens.walk.ActivityCard(
+              ActivityCard(
                 title    = f.title,
-                subtitle = "${f.calories} Cal",
-                iconRes  = f.icon
+                subtitle = "${f.calories} Ккал",
+                iconRes  = f.icon,
+
+                time     = f.dateTime.format(timeFormatter)
               )
             }
           }
@@ -63,8 +74,7 @@ fun FoodView(
 }
 
 private val demoFood = listOf(
-  FoodEntry("Chicken salad", 350, LocalDate.now()),
-  FoodEntry("Protein shake", 220, LocalDate.now()),
-  FoodEntry("Omelette",      280, LocalDate.now().minusDays(1)),
+  FoodEntry("Завтрак", 350, LocalDateTime.now().withHour(8).withMinute(0)),
+  FoodEntry("Обед",    620, LocalDateTime.now().withHour(13).withMinute(45)),
+  FoodEntry("Ужин",    280, LocalDateTime.now().minusDays(1).withHour(19).withMinute(30))
 )
-private fun dateLabel(d: LocalDate) = org.gulaii.app.ui.screens.walk.dateLabel(d)

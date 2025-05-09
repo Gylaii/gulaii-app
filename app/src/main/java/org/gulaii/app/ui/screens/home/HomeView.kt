@@ -61,7 +61,7 @@ fun HomeView(nav: NavHostController) {
         title = "Прогулка",
         value = "2.8",
         unit  = "км",
-        extra = "8:20 – 21:26"
+        extra = "1 час 34 минуты"
       )
 
       MetricWideCardCustom(
@@ -185,7 +185,8 @@ private fun MetricWideCardCustom(
       )
       extra?.let {
         Text(
-          text = it
+          text = it,
+          style = MaterialTheme.typography.bodySmall
         )
       }
     }

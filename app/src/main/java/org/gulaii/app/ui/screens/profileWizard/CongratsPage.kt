@@ -28,14 +28,15 @@ fun CongratsPage(
     Box(
       modifier = Modifier
         .fillMaxSize()
-        .background(roseLight)
-        .padding(24.dp),
+        .background(roseLight),
       contentAlignment = Alignment.Center
     ) {
       Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(24.dp),
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+          .fillMaxWidth()
+          .padding(24.dp)
       ) {
         Text(
           text = "Поздравляем!",
