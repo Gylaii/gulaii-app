@@ -1,12 +1,17 @@
 package org.gulaii.app.ui.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.gulaii.app.ui.screens.authScreen.AuthScreenView
+import org.gulaii.app.ui.screens.common.LoadingScreen
 import org.gulaii.app.ui.screens.initialScreen.InitialScreenView
 import org.gulaii.app.ui.screens.onboardingScreen.OnboardingView
 import org.gulaii.app.ui.screens.otpScreen.OtpView
@@ -44,11 +49,25 @@ fun AppNavHost(
     //Auth Navigation Graph
     navigation<AuthGraph>(startDestination = Screen.Auth) {
       composable<Screen.Auth> {
+        val scope = rememberCoroutineScope()
         AuthScreenView(
-          onForgotPasswordClick = { navController.navigate(Screen.Recovery) },
-          onAuthSuccess = { navController.navigate(Screen.Profile) { popUpTo(AuthGraph) { inclusive = true } } }
+          onForgotPasswordClick = { /*…*/ },
+          onAuthResult = { needWizard ->
+            scope.launch {
+              if (needWizard) {
+                navController.navigate(WizardGraph) {
+                  popUpTo(AuthGraph) { inclusive = true }
+                }
+              } else {
+                navController.navigate(HomeGraph) {
+                  popUpTo(AuthGraph) { inclusive = true }
+                }
+              }
+            }
+          }
         )
       }
+
       composable<Screen.Recovery> {
         RecoveryView(
           onReturnClick = { navController.navigate(Screen.Auth) },
@@ -61,6 +80,28 @@ fun AppNavHost(
         )
       }
     }
+
+    // Wizard (5 шагов)
+    profileWizardGraph(navController) {
+      // после Congratulations → Loading
+      navController.navigate(Screen.Loading) {
+        popUpTo(WizardGraph) { inclusive = true }
+      }
+    }
+
+    // Короткая заставка
+    composable<Screen.Loading> {
+      LoadingScreen()
+      LaunchedEffect(Unit) {
+        delay(800)                       // имитация запроса
+        navController.navigate(HomeGraph) {
+          popUpTo(Screen.Loading) { inclusive = true }
+        }
+      }
+    }
+
+    // Граф с нижней навигацией
+    homeGraph(navController)
 
     // Профиль
     composable<Screen.Profile> {
