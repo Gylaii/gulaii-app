@@ -34,13 +34,12 @@ fun AuthScreenView(
   modifier: Modifier = Modifier,
   viewModel: AuthScreenViewModel = viewModel(),
   onForgotPasswordClick: () -> Unit = {},
-  onAuthSuccess: () -> Unit = {}
+  onAuthResult: (needWizard: Boolean) -> Unit = {},
 ) {
   val uiState by viewModel.ui.collectAsState()
   var passwordVisible by rememberSaveable { mutableStateOf(false) }
   val snackbarHostState = remember { SnackbarHostState() }
 
-  // Слушаем события из VM
   LaunchedEffect(Unit) {
     viewModel.events.collectLatest { ev: AuthEvent ->
       when (ev) {
@@ -64,12 +63,12 @@ fun AuthScreenView(
   ) { innerPadding ->
     Column(
       modifier = modifier
-        .padding(innerPadding)      // теперь учитываем паддинг Scaffold
+        .padding(innerPadding)
         .padding(24.dp)
         .fillMaxSize(),
       horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-      // Заголовок
+
       AnimatedContent(
         targetState = uiState.mode,
         transitionSpec = { fadeIn() togetherWith fadeOut() }
@@ -111,7 +110,6 @@ fun AuthScreenView(
 
       Spacer(Modifier.height(50.dp))
 
-      // Email
       CustomTextField(
         label = "Email",
         value = uiState.email,
@@ -121,7 +119,6 @@ fun AuthScreenView(
 
       Spacer(Modifier.height(20.dp))
 
-      // Password
       CustomTextField(
         label = "Password",
         value = uiState.password,
@@ -143,7 +140,6 @@ fun AuthScreenView(
 
       Spacer(Modifier.height(25.dp))
 
-      // Forgot password
       Text(
         text = "Forgot your password?",
         style = MaterialTheme.typography.bodySmall,
@@ -157,14 +153,17 @@ fun AuthScreenView(
 
       Spacer(Modifier.height(170.dp))
 
-      // Login / Register
       PillButton(
         modifier = Modifier
           .width(200.dp)
           .height(50.dp),
         isEnabled = !uiState.isLoading,
         buttonColor = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primaryContainer),
-        clickAction = { viewModel.onPrimary(onAuthSuccess) }
+        clickAction = {
+          viewModel.onPrimary { needWizard ->
+            onAuthResult(needWizard)
+          }
+        }
       ) {
         if (uiState.isLoading) {
           CircularProgressIndicator(strokeWidth = 2.dp)
@@ -179,7 +178,6 @@ fun AuthScreenView(
 
       Spacer(Modifier.height(10.dp))
 
-      // Или Google
       Text("or", style = MaterialTheme.typography.bodySmall, fontSize = 20.sp)
       Spacer(Modifier.height(10.dp))
       PillButton(
@@ -200,7 +198,6 @@ fun AuthScreenView(
 
       Spacer(Modifier.height(50.dp))
 
-      // Переключение режима
       Text(
         text = if (uiState.mode == AuthMode.SignIn)
           "Need a new account?" else "Already have an account?",

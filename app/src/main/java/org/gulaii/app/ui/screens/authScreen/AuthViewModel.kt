@@ -44,20 +44,21 @@ class AuthScreenViewModel : ViewModel() {
     it.copy(mode = if (it.mode == AuthMode.SignIn) AuthMode.SignUp else AuthMode.SignIn)
   }
 
-  fun onPrimary(onSuccess: () -> Unit) = viewModelScope.launch {
+  fun onPrimary(onResult: (needWizard: Boolean) -> Unit) = viewModelScope.launch {
     _ui.update { it.copy(isLoading = true, error = null) }
+
     runCatching {
       if (_ui.value.mode == AuthMode.SignIn)
         repo.login(_ui.value.email, _ui.value.password)
       else
-        repo.register(_ui.value.email, _ui.value.password, "Alice") // имя можно спросить доп‑полем
+        repo.register(_ui.value.email, _ui.value.password, "Alice")
     }.onSuccess {
-      _events.send(AuthEvent.Success(_ui.value.mode))   // сообщаем в UI
-      onSuccess()
+      val needWizard = (_ui.value.mode == AuthMode.SignUp)
+      onResult(needWizard)
     }.onFailure { e ->
-      Log.e("AuthVM", "Registration failed", e)
-      _events.send(AuthEvent.Error(e.message ?: "Неизвестная ошибка"))
+      Log.e("AuthVM", "Auth failed", e)
       _ui.update { it.copy(isLoading = false) }
+      _events.send(AuthEvent.Error(e.message ?: "Unknown error"))
     }
   }
 }
