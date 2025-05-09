@@ -83,7 +83,6 @@ fun AppNavHost(
 
     // Wizard (5 шагов)
     profileWizardGraph(navController) {
-      // после Congratulations → Loading
       navController.navigate(Screen.Loading) {
         popUpTo(WizardGraph) { inclusive = true }
       }
@@ -93,7 +92,7 @@ fun AppNavHost(
     composable<Screen.Loading> {
       LoadingScreen()
       LaunchedEffect(Unit) {
-        delay(800)                       // имитация запроса
+        delay(800)
         navController.navigate(HomeGraph) {
           popUpTo(Screen.Loading) { inclusive = true }
         }

@@ -17,7 +17,6 @@ import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFact
 import org.gulaii.app.data.repository.AuthRepository
 import org.gulaii.app.data.repository.UserRepository
 import org.gulaii.app.network.ApiService
-import org.gulaii.app.data.dataStore  // ваш DataStore-расширение из DataStoreModule
 
 object ServiceLocator {
 
@@ -28,33 +27,28 @@ object ServiceLocator {
   private lateinit var authRepo: AuthRepository
   private lateinit var userRepo: UserRepository
 
-  /** Вызывается один раз в MainActivity.onCreate() */
   @OptIn(ExperimentalSerializationApi::class)
   fun init(appContext: Context) {
     if (this::api.isInitialized) return
 
-    // 1) Логгер HTTP
     val logging = HttpLoggingInterceptor().apply {
       level = HttpLoggingInterceptor.Level.BASIC
     }
 
-    // 2) Интерсептор для добавления JWT в заголовок
     val authInterceptor = Interceptor { chain ->
-      val token = authRepo.cachedToken        // быстрый доступ
-        ?: runBlocking { authRepo.currentToken() } // крайний случай
+      val token = authRepo.cachedToken
+        ?: runBlocking { authRepo.currentToken() }
       val req = chain.request().newBuilder().apply {
         if (!token.isNullOrBlank()) header("Authorization", "Bearer $token")
       }.build()
       chain.proceed(req)
     }
 
-    // 3) Собираем OkHttpClient
     val client = OkHttpClient.Builder()
       .addInterceptor(logging)
       .addInterceptor(authInterceptor)
       .build()
 
-    // 4) Retrofit с Kotlinx-Serialization
     val json = Json { ignoreUnknownKeys = true }
     val retrofit = Retrofit.Builder()
       .baseUrl("http://10.0.2.2:8080/")

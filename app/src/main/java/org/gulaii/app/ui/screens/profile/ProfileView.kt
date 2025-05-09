@@ -28,11 +28,10 @@ private val avatars = listOf(
   R.drawable.avatar3, R.drawable.avatar4
 )
 
-// ui/screens/profile/ProfileView.kt
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileView(
-  nav: NavHostController = rememberNavController(),   // нужен для выхода
+  nav: NavHostController = rememberNavController(),
   vm : ProfileViewModel  = viewModel(),
 ) {
   val ui by vm.ui.collectAsState()
@@ -53,7 +52,7 @@ fun ProfileView(
           .padding(16.dp),
         horizontalArrangement = Arrangement.SpaceBetween
       ) {
-        // Edit  (слева)
+
         OutlinedButton(
           onClick = { vm.toggleEditing() },
           modifier = Modifier.size(48.dp),
@@ -69,7 +68,6 @@ fun ProfileView(
           )
         }
 
-        // Exit  (справа)
         OutlinedButton(
           onClick = {
             vm.logout {
@@ -114,7 +112,7 @@ fun ProfileView(
           label = "Height (cm)",
           value = ui.height,
           onValueChange = vm::onHeight,
-          enabled = ui.isEditing,                    // !!!
+          enabled = ui.isEditing,
           keyboardOptions = KeyboardOptions.Default
             .copy(keyboardType = KeyboardType.Number)
         )
@@ -132,7 +130,6 @@ fun ProfileView(
 
         Spacer(Modifier.height(16.dp))
 
-        /* --- Goal --- */
         if (ui.isEditing) {
           var expanded by remember { mutableStateOf(false) }
           ExposedDropdownMenuBox(
@@ -170,7 +167,6 @@ fun ProfileView(
 
         Spacer(Modifier.height(16.dp))
 
-        /* --- Activity --- */
         if (ui.isEditing) {
           var expanded by remember { mutableStateOf(false) }
           ExposedDropdownMenuBox(
@@ -208,7 +204,6 @@ fun ProfileView(
 
         Spacer(Modifier.height(32.dp))
 
-        /* --- Save / Edit footer --- */
         if (ui.isEditing) {
           PillButton(
             isEnabled  = !ui.isLoading,
@@ -224,11 +219,10 @@ fun ProfileView(
         }
       }
 
-      /* --- ошибки сети --- */
       ui.error?.let { msg ->
         LaunchedEffect(msg) {
           snackbar.showSnackbar(msg)
-          vm.onGoal("")        // сбросили флаг ошибки (любой soft‑reset)
+          vm.onGoal("")
         }
       }
     }
