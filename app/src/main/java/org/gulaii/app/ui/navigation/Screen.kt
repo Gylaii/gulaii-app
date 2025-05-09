@@ -11,9 +11,14 @@ sealed interface Screen {
 
   @Serializable data object Home      : Screen
   @Serializable data object Food      : Screen
-  @Serializable data object Map       : Screen
+  @Serializable data object Walk       : Screen
   @Serializable data object Loading       : Screen
   @Serializable data object Profile : Screen
+
+  @Serializable
+  data object AddWalkEntry : Screen
+  @Serializable
+  data object AddFoodEntry : Screen
 }
 
 @Serializable data object InitialGraph
