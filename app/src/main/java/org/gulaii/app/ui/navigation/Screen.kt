@@ -15,6 +15,9 @@ sealed interface Screen {
   @Serializable data object Loading       : Screen
   @Serializable data object Profile : Screen
 
+  @Serializable data class EditFoodEntry(val id: String) : Screen
+
+
   @Serializable
   data object AddWalkEntry : Screen
   @Serializable
