@@ -87,7 +87,7 @@ dependencies {
   implementation("androidx.compose.material3.adaptive:adaptive")
 
   // Optional - Integration with activities
-  implementation("androidx.activity:activity-compose:1.10.0")
+  implementation("androidx.activity:activity-compose:1.10.1")
   // Optional - Integration with ViewModels
   implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.5")
   // Optional - Integration with LiveData
