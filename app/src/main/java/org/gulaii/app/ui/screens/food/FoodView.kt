@@ -7,74 +7,67 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import org.gulaii.app.R
-import org.gulaii.app.ui.util.plus
+import org.gulaii.app.data.repository.FoodRepository
+import org.gulaii.app.di.ServiceLocator
 import org.gulaii.app.ui.navigation.BottomNavBar
 import org.gulaii.app.ui.navigation.Screen
 import org.gulaii.app.ui.util.ActivityCard
 import org.gulaii.app.ui.util.dateLabel
-import java.time.LocalDateTime
+import org.gulaii.app.ui.util.plus
+import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import org.gulaii.app.R
 
-data class FoodEntry(
-  val title: String,
-  val calories: Int,
-  val dateTime: LocalDateTime,
-  val icon: Int = R.drawable.ic_food2
-)
-
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FoodView(
   nav: NavHostController,
-  onAdd: () -> Unit = {},
-  meals: List<FoodEntry> = remember { demoFood }
+  foodRepo: FoodRepository = ServiceLocator.foodRepo(),
 ) {
+  val meals by foodRepo.entries.collectAsState(initial = emptyList())
+  val timeFormatter = remember { DateTimeFormatter.ofPattern("HH:mm") }
   val cs = MaterialTheme.colorScheme
 
-  val timeFormatter = DateTimeFormatter.ofPattern("HH:mm")
   Scaffold(
     floatingActionButton = {
-      FloatingActionButton(onClick = onAdd, containerColor = cs.primaryContainer) {
-        Icon(Icons.Default.Add, contentDescription = null)
-      }
+      FloatingActionButton(
+        onClick = { nav.navigate(Screen.AddFoodEntry) },
+        containerColor = cs.primaryContainer
+      ) { Icon(Icons.Default.Add, contentDescription = "add") }
     },
-    bottomBar = { BottomNavBar(nav, Screen.Food) },
-    content = { paddingValues ->
-      LazyColumn(
-        contentPadding = paddingValues + PaddingValues(horizontal = 24.dp, vertical = 16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
-      ) {
+    bottomBar = { BottomNavBar(nav, Screen.Food) }
+  ) { pad ->
 
-        meals
-          .groupBy { it.dateTime.toLocalDate() }
-          .toSortedMap(compareByDescending { it })
-          .forEach { (date, list) ->
-            item {
-              Text(
-                text = dateLabel(date),
-                style = MaterialTheme.typography.headlineSmall
-              )
-            }
-            items(list) { f ->
-              ActivityCard(
-                title    = f.title,
-                subtitle = "${f.calories} Ккал",
-                iconRes  = f.icon,
+    LazyColumn(
+      contentPadding = pad + PaddingValues(horizontal = 24.dp, vertical = 16.dp),
+      verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+      meals.groupBy { it.dateTime.toLocalDate() }
+        .toSortedMap(compareByDescending<LocalDate> { it })   // сортировка по дате
+        .forEach { (date, list) ->
 
-                time     = f.dateTime.format(timeFormatter)
-              )
-            }
+          item {
+            Text(
+              text  = date.dateLabel(),
+              style = MaterialTheme.typography.headlineSmall
+            )
           }
-      }
-    }
-  )
-}
 
-private val demoFood = listOf(
-  FoodEntry("Завтрак", 350, LocalDateTime.now().withHour(8).withMinute(0)),
-  FoodEntry("Обед",    620, LocalDateTime.now().withHour(13).withMinute(45)),
-  FoodEntry("Ужин",    280, LocalDateTime.now().minusDays(1).withHour(19).withMinute(30))
-)
+          items(list) { entry ->
+            ActivityCard(
+              title    = entry.meal.ru,
+              subtitle = "${entry.calories} Ккал",
+              iconRes  = R.drawable.ic_food2,
+              time     = entry.dateTime.format(timeFormatter),
+              onClick  = { nav.navigate(Screen.EditFoodEntry(entry.id)) }
+            )
+          }
+        }
+    }
+  }
+}
