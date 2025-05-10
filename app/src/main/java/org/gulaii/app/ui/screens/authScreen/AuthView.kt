@@ -145,18 +145,20 @@ fun AuthScreenView(
         keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Password)
       )
 
-      Spacer(Modifier.height(25.dp))
+      if (uiState.mode == AuthMode.SignIn) {
+        Spacer(Modifier.height(25.dp))
 
-      Text(
-        text = "Забыли ваш пароль?",
-        style = MaterialTheme.typography.bodySmall,
-        textDecoration = TextDecoration.Underline,
-        fontSize = 16.sp,
-        color = MaterialTheme.colorScheme.secondary,
-        modifier = Modifier.clickable(role = Role.Button) {
-          onForgotPasswordClick()
-        }
-      )
+        Text(
+          text = "Забыли ваш пароль?",
+          style = MaterialTheme.typography.bodySmall,
+          textDecoration = TextDecoration.Underline,
+          fontSize = 16.sp,
+          color = MaterialTheme.colorScheme.secondary,
+          modifier = Modifier.clickable(role = Role.Button) {
+            onForgotPasswordClick()
+          }
+        )
+      }
 
       Spacer(Modifier.height(170.dp))
 
