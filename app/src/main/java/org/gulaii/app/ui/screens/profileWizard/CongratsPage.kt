@@ -1,6 +1,5 @@
 package org.gulaii.app.ui.screens.profileWizard
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -24,65 +23,59 @@ fun CongratsPage(
   val scope = rememberCoroutineScope()
   var loading by remember { mutableStateOf(false) }
 
-  WizardScaffold("") {
-    Box(
+  Scaffold(
+    containerColor = roseLight,
+    contentColor   = MaterialTheme.colorScheme.onBackground
+  ) { innerPadding ->
+    Column(
       modifier = Modifier
         .fillMaxSize()
-        .background(roseLight),
-      contentAlignment = Alignment.Center
+        .padding(innerPadding)
+        .padding(24.dp),
+      verticalArrangement   = Arrangement.Center,
+      horizontalAlignment   = Alignment.CenterHorizontally
     ) {
-      Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(24.dp),
-        modifier = Modifier
-          .fillMaxWidth()
-          .padding(24.dp)
-      ) {
-        Text(
-          text = "Поздравляем!",
-          style = MaterialTheme.typography.headlineMedium,
-          color = MaterialTheme.colorScheme.onBackground,
-          fontSize = 28.sp,
-          textAlign = TextAlign.Center,
-          modifier = Modifier.fillMaxWidth()
-        )
-        Text(
-          text = "Ваш профиль успешно создан и готов к использованию.",
-          style = MaterialTheme.typography.bodyLarge,
-          color = MaterialTheme.colorScheme.onBackground,
-          textAlign = TextAlign.Center,
-          modifier = Modifier.fillMaxWidth()
-        )
-
-        if (loading) {
-          CircularProgressIndicator(
-            color = MaterialTheme.colorScheme.primary
-          )
-        } else {
-          PillButton(
-            modifier = Modifier
-              .fillMaxWidth()
-              .height(56.dp),
-            isEnabled = true,
-            buttonColor = ButtonDefaults.buttonColors(
-              containerColor = MaterialTheme.colorScheme.primary,
-              contentColor = MaterialTheme.colorScheme.onPrimary
-            ),
-            clickAction = {
-              loading = true
-              scope.launch {
-                vm.commit()
-                userRepo.fetchMetrics()
-                onDone()
-              }
+      Text(
+        text      = "Поздравляем!",
+        style     = MaterialTheme.typography.headlineMedium,
+        fontSize  = 28.sp,
+        textAlign = TextAlign.Center,
+        modifier  = Modifier.fillMaxWidth()
+      )
+      Spacer(Modifier.height(8.dp))
+      Text(
+        text      = "Ваш профиль успешно создан и готов к использованию.",
+        style     = MaterialTheme.typography.bodyLarge,
+        textAlign = TextAlign.Center,
+        modifier  = Modifier.fillMaxWidth()
+      )
+      Spacer(Modifier.height(32.dp))
+      if (loading) {
+        CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
+      } else {
+        PillButton(
+          modifier    = Modifier
+            .fillMaxWidth()
+            .height(56.dp),
+          isEnabled   = true,
+          buttonColor = ButtonDefaults.buttonColors(
+            containerColor = MaterialTheme.colorScheme.primary,
+            contentColor   = MaterialTheme.colorScheme.onPrimary
+          ),
+          clickAction = {
+            loading = true
+            scope.launch {
+              vm.commit()
+              userRepo.fetchMetrics()
+              onDone()
             }
-          ) {
-            Text(
-              text = "Начать работу",
-              style = MaterialTheme.typography.titleMedium,
-              fontSize = 18.sp
-            )
           }
+        ) {
+          Text(
+            text      = "Начать работу",
+            style     = MaterialTheme.typography.titleMedium,
+            fontSize  = 18.sp
+          )
         }
       }
     }
