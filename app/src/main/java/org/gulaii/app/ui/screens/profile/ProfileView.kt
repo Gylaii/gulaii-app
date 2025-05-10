@@ -2,6 +2,7 @@ package org.gulaii.app.ui.screens.profile
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -14,14 +15,16 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import kotlinx.coroutines.launch
 import org.gulaii.app.R
 import org.gulaii.app.ui.composables.PillButton
 import org.gulaii.app.ui.navigation.BottomNavBar
@@ -42,14 +45,12 @@ fun ProfileView(
   val avatarRes        = remember { avatars.random() }
   val snackbarHost     = remember { SnackbarHostState() }
   val containerColor   = MaterialTheme.colorScheme.surfaceContainerLow
-  val coroutineScope   = rememberCoroutineScope()
 
   Scaffold(
     snackbarHost = { SnackbarHost(snackbarHost) },
     bottomBar    = { BottomNavBar(nav, Screen.Profile) }
   ) { pad ->
 
-    /** ---------- «плавающие» квадратные кнопки ---------- **/
     Box(
       modifier = Modifier
         .fillMaxSize()
@@ -61,31 +62,27 @@ fun ProfileView(
           .padding(horizontal = 16.dp, vertical = 4.dp),
         horizontalArrangement = Arrangement.SpaceBetween
       ) {
-        FilledIconButton(
-          onClick = { vm.toggleEditing() },
-          colors  = IconButtonDefaults.filledIconButtonColors(containerColor),
-          shape   = RoundedCornerShape(8.dp),
-          modifier = Modifier.size(44.dp)
-        ) { Icon(Icons.Default.Edit, null) }
+        ActionCardButton(
+          icon = Icons.Default.Edit,
+          contentDescription = "Редактировать",
+          onClick = { vm.toggleEditing() }
+        )
 
-        FilledIconButton(
+        ActionCardButton(
+          icon = Icons.Default.ExitToApp,
+          contentDescription = "Выйти",
           onClick = {
             vm.logout { nav.navigate(Screen.Auth) { popUpTo(0) } }
-          },
-          colors  = IconButtonDefaults.filledIconButtonColors(containerColor),
-          shape   = RoundedCornerShape(8.dp),
-          modifier = Modifier.size(44.dp)
-        ) { Icon(Icons.Default.ExitToApp, null) }
+          }
+        )
       }
 
-      /** ---------- основной контент ---------- **/
       Column(
         modifier = Modifier
           .fillMaxSize()
           .padding(top = 72.dp, start = 24.dp, end = 24.dp),
         horizontalAlignment = Alignment.CenterHorizontally
       ) {
-        // Аватар
         Image(
           painter = painterResource(avatarRes),
           contentDescription = null,
@@ -93,6 +90,16 @@ fun ProfileView(
             .size(120.dp)
             .clip(CircleShape)
             .border(2.dp, Color.White, CircleShape)
+        )
+
+        Spacer(Modifier.height(12.dp))
+
+        Text(
+          text = ui.email.ifBlank { "—" },
+          style = MaterialTheme.typography.bodyMedium,
+          color = MaterialTheme.colorScheme.onSurfaceVariant,
+          textAlign = TextAlign.Center,
+          modifier = Modifier.fillMaxWidth()
         )
 
         Spacer(Modifier.height(24.dp))
@@ -151,7 +158,6 @@ fun ProfileView(
       }
     }
 
-    /** ---------- ошибки ---------- **/
     ui.error?.let { msg ->
       LaunchedEffect(msg) {
         snackbarHost.showSnackbar(msg)
@@ -160,9 +166,30 @@ fun ProfileView(
   }
 }
 
-/* -------------------------------------------------------------------------- */
-/*                        Доп. поля: Goal / Activity                          */
-/* -------------------------------------------------------------------------- */
+@Composable
+private fun ActionCardButton(
+  icon: ImageVector,
+  contentDescription: String?,
+  onClick: () -> Unit
+) = ElevatedCard(
+  shape  = RoundedCornerShape(12.dp),
+  colors = CardDefaults.elevatedCardColors(
+    containerColor = MaterialTheme.colorScheme.surfaceContainerLow
+  ),
+  elevation = CardDefaults.elevatedCardElevation(defaultElevation = 3.dp),
+  modifier = Modifier
+    .size(48.dp)
+    .clickable(onClick = onClick)
+) {
+  Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
+    Icon(
+      imageVector = icon,
+      contentDescription = contentDescription,
+      tint = MaterialTheme.colorScheme.onSurfaceVariant
+    )
+  }
+}
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -244,7 +271,6 @@ private fun ActivityField(ui: ProfileUiState, vm: ProfileViewModel) {
   }
 }
 
-/* Card‑обёртка для чтения */
 @Composable
 private fun InfoCard(label: String, value: String) = ElevatedCard(
   modifier = Modifier.fillMaxWidth(),

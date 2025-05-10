@@ -13,20 +13,29 @@ class AuthRepository(
   private val context: Context
 ) {
   private val TOKEN = stringPreferencesKey("jwt")
+  private val EMAIL  = stringPreferencesKey("email")
 
   @Volatile var cachedToken: String? = null
     private set
 
   suspend fun register(email: String, pass: String, name: String): String {
-    val token = api.register(mapOf(
-      "email" to email, "password" to pass, "name" to name
-    )).token
-    saveToken(token); return token
+    val token = api.register(mapOf("email" to email, "password" to pass, "name" to name)).token
+    saveAuth(email, token)
+    return token
   }
 
   suspend fun login(email: String, pass: String): String {
     val token = api.login(mapOf("email" to email, "password" to pass)).token
-    saveToken(token); return token
+    saveAuth(email, token)
+    return token
+  }
+
+  private suspend fun saveAuth(email: String, token: String) {
+    cachedToken = token
+    context.dataStore.edit {
+      it[TOKEN] = token
+      it[EMAIL] = email
+    }
   }
 
   suspend fun currentToken(): String? {
@@ -36,10 +45,8 @@ class AuthRepository(
     return ds
   }
 
-  private suspend fun saveToken(token: String) {
-    cachedToken = token
-    context.dataStore.edit { it[TOKEN] = token }
-  }
+  suspend fun currentEmail(): String? =
+    context.dataStore.data.map { it[EMAIL] }.first()
 
   suspend fun clearToken() {
     cachedToken = null

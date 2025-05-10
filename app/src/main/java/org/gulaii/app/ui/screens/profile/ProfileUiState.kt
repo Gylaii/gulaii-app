@@ -1,6 +1,7 @@
 package org.gulaii.app.ui.screens.profile
 
 data class ProfileUiState(
+  val email: String = "",
   val height: String = "",
   val weight: String = "",
   val goal: String = "",

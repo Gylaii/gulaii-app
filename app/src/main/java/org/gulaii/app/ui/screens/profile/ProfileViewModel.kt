@@ -19,12 +19,21 @@ class ProfileViewModel : ViewModel() {
 
   init {
     viewModelScope.launch {
-      userRepo.metrics.collect { m -> _ui.update { it.from(m) } }
+      val email = authRepo.currentEmail().orEmpty()
+      _ui.update { it.copy(email = email) }
+    }
+
+    viewModelScope.launch {
+      userRepo.metrics.collect { m ->
+        _ui.update { it.from(m) }
+      }
     }
 
     viewModelScope.launch {
       runCatching { userRepo.fetchMetrics() }
-        .onFailure { e -> _ui.update { it.copy(error = e.message) } }
+        .onFailure { e ->
+          _ui.update { it.copy(error = e.message) }
+        }
     }
   }
 
