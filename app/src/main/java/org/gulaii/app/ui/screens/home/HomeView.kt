@@ -1,6 +1,7 @@
 package org.gulaii.app.ui.screens.home
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.snapping.SnapPosition
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -27,18 +28,37 @@ import org.gulaii.app.ui.navigation.Screen
 import org.gulaii.app.ui.theme.roseLight
 import java.time.LocalDate
 import androidx.compose.runtime.getValue
+import org.gulaii.app.data.repository.ActivityRepository
+import org.gulaii.app.ui.util.ActivityCard
+import org.gulaii.app.ui.util.plus
+import androidx.compose.runtime.*
+import org.gulaii.app.ui.screens.walk.toDurationString
+import org.gulaii.app.ui.screens.walk.iconByType
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeView(nav: NavHostController, foodRepo: FoodRepository = ServiceLocator.foodRepo() ) {
+fun HomeView(
+  nav: NavHostController,
+  foodRepo: FoodRepository = ServiceLocator.foodRepo(),
+  activityRepo: ActivityRepository = ServiceLocator.activityRepo()
+) {
   val todayMeals by foodRepo.entries.collectAsState(initial = emptyList())
+  val todayActivities by activityRepo.entries.collectAsState(emptyList())
+
+  val today = LocalDate.now()
   val mealsToday = remember(todayMeals) {
-    val today = LocalDate.now()
     todayMeals.filter { it.dateTime.toLocalDate() == today }
   }
+  val activitiesToday = remember(todayActivities) {
+    todayActivities.filter { it.dateTime.toLocalDate() == today }
+  }
+
   val totalKcalToday = mealsToday.sumOf { it.calories }
+  val totalKmToday   = activitiesToday.sumOf { it.distanceKm }
+  val stepsToday     = (totalKmToday * 1312).toInt()
 
   Scaffold(
+    topBar  = { TodayHeader() },
     bottomBar = { BottomNavBar(nav, Screen.Home) }
   ) { pad ->
 
@@ -54,11 +74,7 @@ fun HomeView(nav: NavHostController, foodRepo: FoodRepository = ServiceLocator.f
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(16.dp)
       ) {
-        StepsCard(
-          modifier = Modifier
-            .weight(1f)
-            .aspectRatio(1f)
-        )
+        StepsCard(steps = stepsToday, modifier = Modifier.weight(1f).aspectRatio(1f))
 
         Column(
           modifier = Modifier.weight(1f),
@@ -68,11 +84,11 @@ fun HomeView(nav: NavHostController, foodRepo: FoodRepository = ServiceLocator.f
             value = totalKcalToday.toString(),
             label = "Ккал"
           )
-          StatSmallCard(value = "15",  label = "км")
+          StatSmallCard(value = "%.1f".format(totalKmToday), label = "км")
         }
       }
 
-      Text("Питание сегодня", style = MaterialTheme.typography.headlineSmall)
+      Text("Питание", style = MaterialTheme.typography.headlineSmall)
 
       if (mealsToday.isEmpty()) {
         Text(
@@ -91,54 +107,54 @@ fun HomeView(nav: NavHostController, foodRepo: FoodRepository = ServiceLocator.f
         }
       }
 
-      Text("Активность сегодня", style = MaterialTheme.typography.headlineSmall)
+      Text("Активность", style = MaterialTheme.typography.headlineSmall)
 
-      MetricWideCardCustom(
-        icon  = R.drawable.ic_walk,
-        title = "Прогулка",
-        value = "2.8",
-        unit  = "км",
-        extra = "1 час 34 минуты"
-      )
+      if (activitiesToday.isEmpty()) {
+        Text(
+          text  = "Записей пока нет",
+          style = MaterialTheme.typography.bodyMedium,
+          color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+      } else {
+        activitiesToday.forEach { act ->
+          ActivityCard(
+            title    = act.type.ru,
+            subtitle = act.durationMin.toDurationString(),
+            iconRes  = iconByType.getValue(act.type),
+            time     = "${act.distanceKm} км"
+          )
+        }
+      }
     }
   }
 }
 
 @Composable
-private fun StepsCard(modifier: Modifier = Modifier) = Card(
+private fun StepsCard(
+  steps: Int,
+  modifier: Modifier = Modifier
+) = Card(
   modifier = modifier,
   colors = CardDefaults.cardColors(containerColor = roseLight),
   shape  = RoundedCornerShape(16.dp)
 ) {
-  Box(
-    modifier = Modifier
-      .fillMaxSize()
-      .padding(16.dp)
-  ) {
-
+  Box(Modifier.fillMaxSize().padding(16.dp)) {
     Row(
       modifier = Modifier.align(Alignment.TopStart),
       verticalAlignment = Alignment.CenterVertically
     ) {
-      IconInCircle(
-        iconRes = R.drawable.ic_steps,
-        modifier = Modifier.size(44.dp)
-      )
+      IconInCircle(iconRes = R.drawable.ic_steps, modifier = Modifier.size(44.dp))
       Spacer(Modifier.width(8.dp))
-      Text(
-        text = "Шаги",
+      Text("Шаги",
         style = MaterialTheme.typography.bodyLarge,
         color = MaterialTheme.colorScheme.primary,
-        textAlign = TextAlign.Center,
         fontSize = 25.sp
       )
     }
-
     Text(
-      text = "8 225",
+      text = steps.toString(),
       style = MaterialTheme.typography.bodyLarge,
       modifier = Modifier.align(Alignment.Center),
-      textAlign = TextAlign.Center,
       fontSize = 35.sp
     )
   }
@@ -245,3 +261,25 @@ private fun IconInCircle(iconRes: Int, modifier: Modifier = Modifier) = Box(
     modifier = Modifier.size(30.dp)
   )
 }
+
+@Composable
+private fun TodayHeader() = Box(
+  modifier = Modifier
+    .fillMaxWidth()
+    .background(roseLight)
+    .padding(
+      WindowInsets.statusBars
+        .asPaddingValues() + PaddingValues(vertical = 12.dp, horizontal = 24.dp)
+    ),
+  contentAlignment = Alignment.Center
+) {
+  Text(
+    text = "Ваши данные за сегодня",
+    style = MaterialTheme.typography.headlineMedium,
+    color = MaterialTheme.colorScheme.onPrimary,
+    textAlign = TextAlign.Center,
+    modifier = Modifier.fillMaxWidth()
+  )
+}
+
+
