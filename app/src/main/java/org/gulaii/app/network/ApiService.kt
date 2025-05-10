@@ -6,14 +6,12 @@ import retrofit2.http.*
 
 interface ApiService {
 
-  // ------------ AUTH ------------
   @POST("api/auth/register")
   suspend fun register(@Body body: Map<String, String>): AuthResponse
 
   @POST("api/auth/login")
   suspend fun login(@Body body: Map<String, String>): AuthResponse
 
-  // ------------ PROFILE ------------
   @GET("api/user/profile/metrics")
   suspend fun getMetrics(): ProfileMetrics
 
