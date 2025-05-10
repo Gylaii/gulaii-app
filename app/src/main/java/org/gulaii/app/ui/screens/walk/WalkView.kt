@@ -15,7 +15,7 @@ import androidx.navigation.NavHostController
 import org.gulaii.app.R
 import org.gulaii.app.data.repository.ActivityType
 import org.gulaii.app.di.ServiceLocator
-import org.gulaii.app.ui.navigation.BottomNavBar
+import org.gulaii.app.ui.composables.BottomNavBar
 import org.gulaii.app.ui.navigation.Screen
 import org.gulaii.app.ui.util.ActivityCard
 import org.gulaii.app.ui.util.dateLabel

@@ -26,7 +26,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import org.gulaii.app.R
 import org.gulaii.app.ui.composables.PillButton
-import org.gulaii.app.ui.navigation.BottomNavBar
+import org.gulaii.app.ui.composables.BottomNavBar
 import org.gulaii.app.ui.navigation.Screen
 
 private val avatars = listOf(
