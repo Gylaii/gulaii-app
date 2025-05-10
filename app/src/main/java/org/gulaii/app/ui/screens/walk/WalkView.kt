@@ -55,7 +55,7 @@ fun WalkView(
             Text(
               text = dateLabel(date),
               modifier = Modifier.padding(vertical = 4.dp),
-              style = MaterialTheme.typography.titleMedium
+              style = MaterialTheme.typography.headlineSmall
             )
           }
 
