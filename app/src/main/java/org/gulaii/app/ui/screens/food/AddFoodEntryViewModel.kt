@@ -12,6 +12,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -21,6 +22,8 @@ import org.gulaii.app.data.repository.Dish
 import org.gulaii.app.data.repository.FoodRepository
 import org.gulaii.app.data.repository.FoodEntry
 import org.gulaii.app.di.ServiceLocator
+import org.gulaii.app.ui.composables.CustomTextField
+import java.time.format.DateTimeParseException
 import java.time.*
 
 data class DishUi(
@@ -133,70 +136,91 @@ class AddFoodEntryViewModel(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun DateTimeSection(
+fun DateTimeSection(
   dateTime: LocalDateTime,
   onDateChange: (LocalDateTime) -> Unit
 ) {
-  var showDialog by remember { mutableStateOf(false) }
+  var isEditing by remember { mutableStateOf(false) }
+  var editedDateTime by remember { mutableStateOf(dateTime) }
 
-  val dateState = rememberDatePickerState(initialSelectedDateMillis = dateTime.toEpochMilli())
-  val timeState = rememberTimePickerState(
-    initialHour = dateTime.hour,
-    initialMinute = dateTime.minute,
-    is24Hour = true
-  )
+  val toggleEditing = {
+    isEditing = !isEditing
+    if (!isEditing) {
+      onDateChange(editedDateTime)
+    }
+  }
 
-  LaunchedEffect(dateState.selectedDateMillis, timeState.hour, timeState.minute) {
-    dateState.selectedDateMillis?.let { millis ->
-      val newDate = Instant.ofEpochMilli(millis)
-        .atZone(ZoneId.systemDefault())
-        .toLocalDate()
-      val newTime = LocalTime.of(timeState.hour, timeState.minute)
-      onDateChange(LocalDateTime.of(newDate, newTime))
+  fun formatDate(date: String): String {
+    val parts = date.split("-")
+    return if (parts.size == 3) {
+      val month = parts[1].padStart(2, '0')
+      val day = parts[2].padStart(2, '0')
+      "${parts[0]}-$month-$day"
+    } else {
+      date
+    }
+  }
+
+  fun formatTime(time: String): String {
+    val parts = time.split(":")
+    return if (parts.size == 2) {
+      val hour = parts[0].padStart(2, '0')
+      val minute = parts[1].padStart(2, '0')
+      "$hour:$minute"
+    } else {
+      time
     }
   }
 
   OutlinedCard(
     modifier = Modifier
       .fillMaxWidth()
-      .clickable { showDialog = true }
+      .clickable { if (isEditing) toggleEditing() }
   ) {
     Row(
       Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
       verticalAlignment = Alignment.CenterVertically
     ) {
       Column(Modifier.weight(1f)) {
-        Text(
-          text = dateTime.toLocalDate().toString(),
-          style = MaterialTheme.typography.bodyLarge
+        CustomTextField(
+          label = "Дата",
+          value = editedDateTime.toLocalDate().toString(),
+          onValueChange = { newValue ->
+            try {
+              val formattedDate = formatDate(newValue)
+              val newDate = LocalDate.parse(formattedDate)
+              editedDateTime = LocalDateTime.of(newDate, editedDateTime.toLocalTime())
+            } catch (e: DateTimeParseException) {
+            }
+          },
+          enabled = isEditing,
+          modifier = Modifier.fillMaxWidth()
         )
-        Text(
-          text = dateTime.toLocalTime().withSecond(0).withNano(0).toString(),
-          style = MaterialTheme.typography.bodyMedium
+
+        CustomTextField(
+          label = "Время",
+          value = editedDateTime.toLocalTime().withSecond(0).withNano(0).toString(),
+          onValueChange = { newTime ->
+            try {
+              val formattedTime = formatTime(newTime)
+              val newLocalTime = LocalTime.parse(formattedTime)
+              editedDateTime = LocalDateTime.of(editedDateTime.toLocalDate(), newLocalTime)
+            } catch (e: DateTimeParseException) {
+            }
+          },
+          enabled = isEditing,
+          modifier = Modifier.fillMaxWidth()
         )
       }
+
       Icon(
-        imageVector = Icons.Filled.Edit,
-        contentDescription = "Изменить дату и время"
+        imageVector = if (isEditing) Icons.Filled.Check else Icons.Filled.Edit,
+        contentDescription = if (isEditing) "Сохранить" else "Редактировать",
+        modifier = Modifier
+          .clickable { toggleEditing() }
+          .padding(start = 16.dp)
+          .size(24.dp)
       )
     }
   }
-
-  if (showDialog) {
-    AlertDialog(
-      onDismissRequest = { showDialog = false },
-      confirmButton = { TextButton({ showDialog = false }) { Text("OK") } },
-      dismissButton = { TextButton({ showDialog = false }) { Text("Отмена") } },
-      text = {
-        Column {
-          DatePicker(state = dateState)
-          Spacer(Modifier.height(16.dp))
-          TimePicker(state = timeState)
-        }
-      }
-    )
-  }
 }
-
-private fun LocalDateTime.toEpochMilli(): Long =
-  atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()

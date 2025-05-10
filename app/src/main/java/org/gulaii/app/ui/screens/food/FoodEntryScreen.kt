@@ -24,7 +24,7 @@ fun FoodEntryScreen(
   nav: NavHostController,
   onSaved: () -> Unit,
   vm: FoodEntryContract =
-    androidx.lifecycle.viewmodel.compose.viewModel<AddFoodEntryViewModel>()   // по‑умолчанию “добавление”
+    androidx.lifecycle.viewmodel.compose.viewModel<AddFoodEntryViewModel>()
 ) {
   val uiState by vm.ui
   val scroll  = rememberScrollState()
