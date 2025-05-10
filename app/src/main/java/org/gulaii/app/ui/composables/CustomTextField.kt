@@ -42,7 +42,6 @@ fun CustomTextField(
     OutlinedTextField(
       value = value,
       label = { Text(label) },
-      placeholder = { Text(value) },
       onValueChange = onValueChange,
       maxLines = 1,
       leadingIcon = leadingIcon?.let {
