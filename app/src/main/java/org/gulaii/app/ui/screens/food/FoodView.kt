@@ -45,10 +45,10 @@ fun FoodView(
 
     LazyColumn(
       contentPadding = pad + PaddingValues(horizontal = 24.dp, vertical = 16.dp),
-      verticalArrangement = Arrangement.spacedBy(16.dp)
+      verticalArrangement = Arrangement.spacedBy(4.dp)
     ) {
       meals.groupBy { it.dateTime.toLocalDate() }
-        .toSortedMap(compareByDescending<LocalDate> { it })   // сортировка по дате
+        .toSortedMap(compareByDescending<LocalDate> { it })
         .forEach { (date, list) ->
 
           item {
