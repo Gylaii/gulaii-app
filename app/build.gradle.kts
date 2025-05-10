@@ -52,7 +52,7 @@ dependencies {
   implementation(libs.androidx.navigation.compose)
   testImplementation(libs.junit)
   androidTestImplementation(libs.androidx.junit)
-  androidTestImplementation("androidx.test.espresso:espresso-core:3.5.0")
+  androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
 
   val composeBom = platform("androidx.compose:compose-bom:2025.02.00")
   implementation(composeBom)
