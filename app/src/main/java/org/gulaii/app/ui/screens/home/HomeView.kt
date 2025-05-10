@@ -1,7 +1,6 @@
 package org.gulaii.app.ui.screens.home
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.snapping.SnapPosition
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -23,7 +22,7 @@ import androidx.navigation.NavHostController
 import org.gulaii.app.R
 import org.gulaii.app.data.repository.FoodRepository
 import org.gulaii.app.di.ServiceLocator
-import org.gulaii.app.ui.navigation.BottomNavBar
+import org.gulaii.app.ui.composables.BottomNavBar
 import org.gulaii.app.ui.navigation.Screen
 import org.gulaii.app.ui.theme.roseLight
 import java.time.LocalDate
@@ -31,7 +30,6 @@ import androidx.compose.runtime.getValue
 import org.gulaii.app.data.repository.ActivityRepository
 import org.gulaii.app.ui.util.ActivityCard
 import org.gulaii.app.ui.util.plus
-import androidx.compose.runtime.*
 import org.gulaii.app.ui.screens.walk.toDurationString
 import org.gulaii.app.ui.screens.walk.iconByType
 

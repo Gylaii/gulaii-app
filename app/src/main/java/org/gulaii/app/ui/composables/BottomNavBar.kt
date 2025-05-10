@@ -1,4 +1,4 @@
-package org.gulaii.app.ui.navigation
+package org.gulaii.app.ui.composables
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -14,6 +14,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import org.gulaii.app.R
+import org.gulaii.app.ui.navigation.Screen
 import org.gulaii.app.ui.theme.roseLight
 
 @Composable
