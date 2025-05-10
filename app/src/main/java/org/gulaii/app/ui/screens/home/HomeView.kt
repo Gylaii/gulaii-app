@@ -8,6 +8,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -18,13 +20,24 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import org.gulaii.app.R
+import org.gulaii.app.data.repository.FoodRepository
+import org.gulaii.app.di.ServiceLocator
 import org.gulaii.app.ui.navigation.BottomNavBar
 import org.gulaii.app.ui.navigation.Screen
 import org.gulaii.app.ui.theme.roseLight
+import java.time.LocalDate
+import androidx.compose.runtime.getValue
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeView(nav: NavHostController) {
+fun HomeView(nav: NavHostController, foodRepo: FoodRepository = ServiceLocator.foodRepo() ) {
+  val todayMeals by foodRepo.entries.collectAsState(initial = emptyList())
+  val mealsToday = remember(todayMeals) {
+    val today = LocalDate.now()
+    todayMeals.filter { it.dateTime.toLocalDate() == today }
+  }
+  val totalKcalToday = mealsToday.sumOf { it.calories }
+
   Scaffold(
     bottomBar = { BottomNavBar(nav, Screen.Home) }
   ) { pad ->
@@ -51,10 +64,34 @@ fun HomeView(nav: NavHostController) {
           modifier = Modifier.weight(1f),
           verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-          StatSmallCard(value = "300", label = "Ккал")
+          StatSmallCard(
+            value = totalKcalToday.toString(),
+            label = "Ккал"
+          )
           StatSmallCard(value = "15",  label = "км")
         }
       }
+
+      Text("Питание сегодня", style = MaterialTheme.typography.headlineSmall)
+
+      if (mealsToday.isEmpty()) {
+        Text(
+          text  = "Записей пока нет",
+          style = MaterialTheme.typography.bodyMedium,
+          color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+      } else {
+        mealsToday.forEach { entry ->
+          MetricWideCardCustom(
+            icon  = R.drawable.ic_food,
+            title = entry.meal.ru,
+            value = entry.calories.toString(),
+            unit  = "Ккал"
+          )
+        }
+      }
+
+      Text("Активность сегодня", style = MaterialTheme.typography.headlineSmall)
 
       MetricWideCardCustom(
         icon  = R.drawable.ic_walk,
@@ -62,13 +99,6 @@ fun HomeView(nav: NavHostController) {
         value = "2.8",
         unit  = "км",
         extra = "1 час 34 минуты"
-      )
-
-      MetricWideCardCustom(
-        icon  = R.drawable.ic_food,
-        title = "Ужин",
-        value = "300",
-        unit  = "Ккал"
       )
     }
   }
