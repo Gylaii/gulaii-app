@@ -18,10 +18,8 @@ sealed interface Screen {
   @Serializable data class EditFoodEntry(val id: String) : Screen
 
 
-  @Serializable
-  data object AddWalkEntry : Screen
-  @Serializable
-  data object AddFoodEntry : Screen
+  @Serializable data object AddActivityEntry : Screen
+  @Serializable data object AddFoodEntry : Screen
 }
 
 @Serializable data object InitialGraph

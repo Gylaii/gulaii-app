@@ -12,6 +12,7 @@ import org.gulaii.app.ui.screens.profile.ProfileView
 import org.gulaii.app.ui.screens.walk.WalkView
 import org.gulaii.app.ui.screens.food.EditFoodVM
 import org.gulaii.app.ui.screens.food.FoodEntryScreen
+import org.gulaii.app.ui.screens.walk.ActivityEntryScreen
 
 fun NavGraphBuilder.homeGraph(nav: NavHostController) {
   navigation<HomeGraph>(startDestination = Screen.Home) {
@@ -40,6 +41,9 @@ fun NavGraphBuilder.homeGraph(nav: NavHostController) {
         onSaved = { nav.popBackStack() },
         vm      = vm
       )
+    }
+    composable<Screen.AddActivityEntry> {
+      ActivityEntryScreen(nav = nav) { nav.popBackStack(Screen.Walk, false) }
     }
   }
 }
