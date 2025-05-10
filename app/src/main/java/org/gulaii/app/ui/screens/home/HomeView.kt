@@ -65,10 +65,16 @@ fun HomeView(
     Column(
       modifier = Modifier
         .padding(pad)
-        .padding(horizontal = 24.dp, vertical = 16.dp)
+        .padding(
+          start  = 24.dp,
+          end    = 24.dp,
+          bottom = 16.dp
+        )
         .verticalScroll(rememberScrollState()),
       verticalArrangement = Arrangement.spacedBy(24.dp)
     ) {
+
+      Spacer(modifier = Modifier.height(8.dp))
 
       Row(
         modifier = Modifier.fillMaxWidth(),
@@ -99,10 +105,10 @@ fun HomeView(
       } else {
         mealsToday.forEach { entry ->
           MetricWideCardCustom(
-            icon  = R.drawable.ic_food,
+            icon = R.drawable.ic_food,
             title = entry.meal.ru,
             value = entry.calories.toString(),
-            unit  = "Ккал"
+            unit = "Ккал"
           )
         }
       }
@@ -116,13 +122,15 @@ fun HomeView(
           color = MaterialTheme.colorScheme.onSurfaceVariant
         )
       } else {
-        activitiesToday.forEach { act ->
-          ActivityCard(
-            title    = act.type.ru,
-            subtitle = act.durationMin.toDurationString(),
-            iconRes  = iconByType.getValue(act.type),
-            time     = "${act.distanceKm} км"
-          )
+        Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+          activitiesToday.forEach { act ->
+            ActivityCard(
+              title = act.type.ru,
+              subtitle = act.durationMin.toDurationString(),
+              iconRes = iconByType.getValue(act.type),
+              time = "${act.distanceKm} км"
+            )
+          }
         }
       }
     }
@@ -262,24 +270,20 @@ private fun IconInCircle(iconRes: Int, modifier: Modifier = Modifier) = Box(
   )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun TodayHeader() = Box(
-  modifier = Modifier
-    .fillMaxWidth()
-    .background(roseLight)
-    .padding(
-      WindowInsets.statusBars
-        .asPaddingValues() + PaddingValues(vertical = 12.dp, horizontal = 24.dp)
+private fun TodayHeader() {
+  CenterAlignedTopAppBar(
+    title = { Text("Ваши данные за сегодня") },
+    colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+      containerColor   = roseLight,
+      titleContentColor = MaterialTheme.colorScheme.onPrimary
     ),
-  contentAlignment = Alignment.Center
-) {
-  Text(
-    text = "Ваши данные за сегодня",
-    style = MaterialTheme.typography.headlineMedium,
-    color = MaterialTheme.colorScheme.onPrimary,
-    textAlign = TextAlign.Center,
-    modifier = Modifier.fillMaxWidth()
+    scrollBehavior = null
   )
 }
+
+
+
 
 

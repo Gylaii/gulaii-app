@@ -11,9 +11,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import java.time.LocalDate
-import java.time.format.TextStyle
-import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -69,11 +66,3 @@ fun IconInCircle(iconRes: Int, modifier: Modifier = Modifier) = Box(
     modifier = Modifier.size(24.dp)
   )
 }
-
-fun dateLabel(date: LocalDate): String =
-  when (date) {
-    LocalDate.now()            -> "Сегодня"
-    LocalDate.now().minusDays(1) -> "Вчера"
-    else                        -> date.dayOfWeek.getDisplayName(TextStyle.FULL, Locale.getDefault())
-  }
-

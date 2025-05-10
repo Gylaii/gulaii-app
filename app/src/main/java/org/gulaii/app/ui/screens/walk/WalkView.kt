@@ -44,7 +44,7 @@ fun WalkView(
 
     LazyColumn(
       contentPadding = pad + PaddingValues(horizontal = 24.dp, vertical = 16.dp),
-      verticalArrangement = Arrangement.spacedBy(16.dp)
+      verticalArrangement = Arrangement.spacedBy(2.dp)
     ) {
       activities
         .groupBy { it.dateTime.toLocalDate() }
@@ -53,7 +53,7 @@ fun WalkView(
 
           item {
             Text(
-              text = dateLabel(date),
+              text = date.dateLabel(),
               modifier = Modifier.padding(vertical = 4.dp),
               style = MaterialTheme.typography.headlineSmall
             )
