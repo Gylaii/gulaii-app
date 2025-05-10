@@ -2,10 +2,7 @@ package org.gulaii.app.di
 
 import android.annotation.SuppressLint
 import android.content.Context
-import androidx.datastore.preferences.core.stringPreferencesKey
 import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import okhttp3.Interceptor
@@ -15,20 +12,21 @@ import okhttp3.MediaType.Companion.toMediaType
 import retrofit2.Retrofit
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import org.gulaii.app.data.repository.AuthRepository
+import org.gulaii.app.data.repository.FoodRepository
 import org.gulaii.app.data.repository.UserRepository
 import org.gulaii.app.network.ApiService
 
 object ServiceLocator {
 
-  private const val TOKEN_KEY = "jwt"
-
   private lateinit var api: ApiService
   @SuppressLint("StaticFieldLeak")
   private lateinit var authRepo: AuthRepository
   private lateinit var userRepo: UserRepository
+  private lateinit var foodRepo: FoodRepository
 
   @OptIn(ExperimentalSerializationApi::class)
   fun init(appContext: Context) {
+    foodRepo = FoodRepository()
     if (this::api.isInitialized) return
 
     val logging = HttpLoggingInterceptor().apply {
@@ -61,6 +59,7 @@ object ServiceLocator {
     userRepo = UserRepository(api)
   }
 
+  fun foodRepo() = foodRepo
   fun authRepo() = authRepo
   fun userRepo() = userRepo
 }
