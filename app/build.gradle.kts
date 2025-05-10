@@ -86,6 +86,8 @@ dependencies {
   // Optional - Add window size utils
   implementation("androidx.compose.material3.adaptive:adaptive")
 
+  implementation("androidx.compose.material3:material3:1.2.0-alpha08")
+
   // Optional - Integration with activities
   implementation("androidx.activity:activity-compose:1.10.0")
   // Optional - Integration with ViewModels
