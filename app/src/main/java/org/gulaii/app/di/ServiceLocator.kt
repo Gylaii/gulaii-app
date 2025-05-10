@@ -11,6 +11,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import okhttp3.MediaType.Companion.toMediaType
 import retrofit2.Retrofit
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
+import org.gulaii.app.data.repository.ActivityRepository
 import org.gulaii.app.data.repository.AuthRepository
 import org.gulaii.app.data.repository.FoodRepository
 import org.gulaii.app.data.repository.UserRepository
@@ -23,10 +24,12 @@ object ServiceLocator {
   private lateinit var authRepo: AuthRepository
   private lateinit var userRepo: UserRepository
   private lateinit var foodRepo: FoodRepository
+  private lateinit var activityRepo: ActivityRepository
 
   @OptIn(ExperimentalSerializationApi::class)
   fun init(appContext: Context) {
     foodRepo = FoodRepository()
+    activityRepo = ActivityRepository()
     if (this::api.isInitialized) return
 
     val logging = HttpLoggingInterceptor().apply {
@@ -60,6 +63,7 @@ object ServiceLocator {
   }
 
   fun foodRepo() = foodRepo
+  fun activityRepo() = activityRepo
   fun authRepo() = authRepo
   fun userRepo() = userRepo
 }
