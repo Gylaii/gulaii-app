@@ -34,25 +34,25 @@ fun AuthScreenView(
   modifier: Modifier = Modifier,
   viewModel: AuthScreenViewModel = viewModel(),
   onForgotPasswordClick: () -> Unit = {},
-  onAuthResult: (needWizard: Boolean) -> Unit = {},
+  onAuthResult: (Boolean) -> Unit = {},
 ) {
   val uiState by viewModel.ui.collectAsState()
   var passwordVisible by rememberSaveable { mutableStateOf(false) }
   val snackbarHostState = remember { SnackbarHostState() }
 
   LaunchedEffect(Unit) {
-    viewModel.events.collectLatest { ev: AuthEvent ->
+    viewModel.events.collectLatest { ev ->
       when (ev) {
         is AuthEvent.Success -> {
-          val msg = if (ev.mode == AuthMode.SignUp)
-            "Аккаунт создан"
-          else
-            "Вход выполнен"
-          snackbarHostState.showSnackbar(msg)
+          snackbarHostState.showSnackbar(
+            if (ev.mode == AuthMode.SignUp) "Аккаунт создан" else "Вход выполнен"
+          )
+          onAuthResult(ev.needWizard)
         }
         is AuthEvent.Error -> {
-          val msg = ev.message.ifBlank { "Не удалось создать аккаунт" }
-          snackbarHostState.showSnackbar(msg)
+          snackbarHostState.showSnackbar(
+            ev.message.ifBlank { "Не удалось создать аккаунт" }
+          )
         }
       }
     }
@@ -79,39 +79,24 @@ fun AuthScreenView(
             .padding(top = 60.dp),
           horizontalAlignment = Alignment.CenterHorizontally
         ) {
-          if (mode == AuthMode.SignIn) {
-            Text(
-              text = "Добро пожаловать",
-              style = MaterialTheme.typography.headlineSmall,
-              fontSize = 32.sp,
-              color = MaterialTheme.colorScheme.onBackground,
-              textAlign = TextAlign.Center
-            )
-            Spacer(Modifier.height(8.dp))
-            Text(
-              text = "в Gulaii",
-              style = MaterialTheme.typography.headlineSmall,
-              fontSize = 32.sp,
-              color = MaterialTheme.colorScheme.primary,
-              textAlign = TextAlign.Center
-            )
-          } else {
-            Text(
-              text = "Создайте",
-              style = MaterialTheme.typography.headlineSmall,
-              fontSize = 32.sp,
-              color = MaterialTheme.colorScheme.onBackground,
-              textAlign = TextAlign.Center
-            )
-            Spacer(Modifier.height(8.dp))
-            Text(
-              text = "аккаунт",
-              style = MaterialTheme.typography.headlineSmall,
-              fontSize = 32.sp,
-              color = MaterialTheme.colorScheme.primary,
-              textAlign = TextAlign.Center
-            )
-          }
+          val top = if (mode == AuthMode.SignIn) "Добро пожаловать" else "Создайте"
+          val bottom = if (mode == AuthMode.SignIn) "в Gulaii" else "аккаунт"
+
+          Text(
+            text = top,
+            style = MaterialTheme.typography.headlineSmall,
+            fontSize = 32.sp,
+            color = MaterialTheme.colorScheme.onBackground,
+            textAlign = TextAlign.Center
+          )
+          Spacer(Modifier.height(8.dp))
+          Text(
+            text = bottom,
+            style = MaterialTheme.typography.headlineSmall,
+            fontSize = 32.sp,
+            color = MaterialTheme.colorScheme.primary,
+            textAlign = TextAlign.Center
+          )
         }
       }
 
@@ -168,11 +153,7 @@ fun AuthScreenView(
           .height(50.dp),
         isEnabled = !uiState.isLoading,
         buttonColor = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primaryContainer),
-        clickAction = {
-          viewModel.onPrimary { needWizard ->
-            onAuthResult(needWizard)
-          }
-        }
+        clickAction = { viewModel.onPrimary() }
       ) {
         if (uiState.isLoading) {
           CircularProgressIndicator(strokeWidth = 2.dp)
@@ -189,6 +170,7 @@ fun AuthScreenView(
 
       Text("или", style = MaterialTheme.typography.bodySmall, fontSize = 20.sp)
       Spacer(Modifier.height(10.dp))
+
       PillButton(
         modifier = Modifier
           .width(200.dp)
@@ -223,5 +205,7 @@ fun AuthScreenView(
 @Preview
 @Composable
 fun AuthScreenViewPreview() {
-  GulaiiTheme { AuthScreenView() }
+  GulaiiTheme {
+    AuthScreenView()
+  }
 }

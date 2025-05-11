@@ -12,7 +12,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
 import org.gulaii.app.data.repository.ActivityType
 import org.gulaii.app.ui.composables.CustomTextField
 import org.gulaii.app.ui.composables.PillButton
@@ -21,10 +20,9 @@ import org.gulaii.app.ui.screens.food.DateTimeSection
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 fun ActivityEntryScreen(
-  nav: NavHostController,
-  vm: ActivityEntryContract =
-    androidx.lifecycle.viewmodel.compose.viewModel<AddActivityEntryViewModel>(),
-  onSaved: () -> Unit = {}
+  onBack: () -> Unit,
+  onSaved: () -> Unit,
+  vm: ActivityEntryContract = androidx.lifecycle.viewmodel.compose.viewModel<AddActivityEntryViewModel>()
 ) {
   val ui by vm.ui
   val scroll = rememberScrollState()
@@ -35,7 +33,7 @@ fun ActivityEntryScreen(
       TopAppBar(
         title = { Text("Новая активность") },
         navigationIcon = {
-          IconButton({ nav.popBackStack() }) {
+          IconButton(onClick = onBack) {
             Icon(Icons.Default.ArrowBack, "back")
           }
         }
@@ -43,7 +41,10 @@ fun ActivityEntryScreen(
     }
   ) { pad ->
     Column(
-      Modifier.padding(pad).padding(24.dp).verticalScroll(scroll),
+      Modifier
+        .padding(pad)
+        .padding(24.dp)
+        .verticalScroll(scroll),
       verticalArrangement = Arrangement.spacedBy(24.dp)
     ) {
       Text("Тип", style = MaterialTheme.typography.titleMedium)
@@ -77,9 +78,11 @@ fun ActivityEntryScreen(
         modifier    = Modifier.fillMaxWidth().height(56.dp),
         isEnabled   = ui.duration.isNotBlank() && ui.distance.isNotBlank(),
         buttonColor = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary),
-        clickAction = { vm.save(); onSaved() }
+        clickAction = {
+          vm.save()
+          onSaved()
+        }
       ) { Text("Сохранить", color = MaterialTheme.colorScheme.onPrimary) }
     }
   }
 }
-

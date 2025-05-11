@@ -1,30 +1,36 @@
 package org.gulaii.app.ui.screens.food
 
 import androidx.compose.foundation.clickable
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.ViewModel
-import java.time.LocalDateTime
-import androidx.compose.runtime.State
-import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedCard
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.State
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModel
 import org.gulaii.app.data.repository.Dish
-import org.gulaii.app.data.repository.FoodRepository
 import org.gulaii.app.data.repository.FoodEntry
+import org.gulaii.app.data.repository.FoodRepository
 import org.gulaii.app.di.ServiceLocator
 import org.gulaii.app.ui.composables.CustomTextField
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.LocalTime
 import java.time.format.DateTimeParseException
-import java.time.*
 
 data class DishUi(
   var name : String = "",
@@ -57,11 +63,11 @@ class AddFoodEntryViewModel(
   override fun selectMeal(t: MealType) { _ui.update { it.copy(currentMeal = t) } }
   override fun setDate(dt: LocalDateTime) { _ui.update { it.copy(dateTime = dt) } }
 
-  override fun onDishChange(i: Int, mut: DishUi.() -> Unit) {
+  override fun onDishChange(index: Int, mut: DishUi.() -> Unit) {
     _ui.update {
       it.copy(
         editDishes = it.editDishes.mapIndexed { idx, d ->
-          if (idx == i)
+          if (idx == index)
             d.copy().apply(mut)
           else d
         }
@@ -69,16 +75,16 @@ class AddFoodEntryViewModel(
     }
   }
 
-  override fun saveDish(i: Int) = _ui.update {
+  override fun saveDish(index: Int) = _ui.update {
     it.copy(editDishes = it.editDishes.mapIndexed { idx, d ->
-      if (idx == i) d.copy(isSaved = true) else d
+      if (idx == index) d.copy(isSaved = true) else d
     })
   }
 
   override fun addDish() = _ui.update { it.copy(editDishes = it.editDishes + DishUi()) }
 
-  override fun removeDish(i: Int) = _ui.update {
-    val remained = it.editDishes.toMutableList().also { l -> l.removeAt(i) }
+  override fun removeDish(index: Int) = _ui.update {
+    val remained = it.editDishes.toMutableList().also { l -> l.removeAt(index) }
 
     val ensuredList = if (remained.isEmpty()) listOf(DishUi()) else remained
 
@@ -92,7 +98,7 @@ class AddFoodEntryViewModel(
         name = tpl.name; grams = tpl.grams; kcal = tpl.kcal
       }
     } else {
-      addDish();
+      addDish()
       onDishChange(_ui.value.editDishes.lastIndex) {
         name = tpl.name; grams = tpl.grams; kcal = tpl.kcal
       }
@@ -134,7 +140,6 @@ class AddFoodEntryViewModel(
   }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DateTimeSection(
   dateTime: LocalDateTime,
@@ -190,7 +195,7 @@ fun DateTimeSection(
               val formattedDate = formatDate(newValue)
               val newDate = LocalDate.parse(formattedDate)
               editedDateTime = LocalDateTime.of(newDate, editedDateTime.toLocalTime())
-            } catch (e: DateTimeParseException) {
+            } catch (_: DateTimeParseException) {
             }
           },
           enabled = isEditing,
@@ -205,7 +210,7 @@ fun DateTimeSection(
               val formattedTime = formatTime(newTime)
               val newLocalTime = LocalTime.parse(formattedTime)
               editedDateTime = LocalDateTime.of(editedDateTime.toLocalDate(), newLocalTime)
-            } catch (e: DateTimeParseException) {
+            } catch (_: DateTimeParseException) {
             }
           },
           enabled = isEditing,

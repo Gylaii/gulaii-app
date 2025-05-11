@@ -22,11 +22,11 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import org.gulaii.app.R
+import org.gulaii.app.ui.composables.ActivityField
 import org.gulaii.app.ui.composables.PillButton
 import org.gulaii.app.ui.composables.BottomNavBar
+import org.gulaii.app.ui.composables.InfoCard
 import org.gulaii.app.ui.navigation.Screen
 
 private val avatars = listOf(
@@ -34,20 +34,24 @@ private val avatars = listOf(
   R.drawable.avatar3, R.drawable.avatar4
 )
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileView(
-  nav: NavHostController = rememberNavController(),
-  vm : ProfileViewModel   = viewModel(),
+  onNavigate: (Screen) -> Unit,
+  vm: ProfileViewModel = viewModel(),
 ) {
-  val ui               by vm.ui.collectAsState()
-  val avatarRes        = remember { avatars.random() }
-  val snackbarHost     = remember { SnackbarHostState() }
-  val containerColor   = MaterialTheme.colorScheme.surfaceContainerLow
+  val ui by vm.ui.collectAsState()
+  val avatarRes = remember { avatars.random() }
+  val snackbarHost = remember { SnackbarHostState() }
+  val containerColor = MaterialTheme.colorScheme.surfaceContainerLow
 
   Scaffold(
     snackbarHost = { SnackbarHost(snackbarHost) },
-    bottomBar    = { BottomNavBar(nav, Screen.Profile) }
+    bottomBar = {
+      BottomNavBar(
+        current = Screen.Profile,
+        onNavigate = onNavigate
+      )
+    }
   ) { pad ->
 
     Box(
@@ -71,7 +75,9 @@ fun ProfileView(
           icon = Icons.Default.ExitToApp,
           contentDescription = "Выйти",
           onClick = {
-            vm.logout { nav.navigate(Screen.Auth) { popUpTo(0) } }
+            vm.logout {
+              onNavigate(Screen.Auth)
+            }
           }
         )
       }
@@ -139,8 +145,8 @@ fun ProfileView(
 
         if (ui.isEditing) {
           PillButton(
-            isEnabled   = !ui.isLoading,
-            modifier    = Modifier
+            isEnabled = !ui.isLoading,
+            modifier = Modifier
               .fillMaxWidth()
               .height(52.dp),
             buttonColor = ButtonDefaults.buttonColors(
@@ -171,7 +177,7 @@ private fun ActionCardButton(
   contentDescription: String?,
   onClick: () -> Unit
 ) = ElevatedCard(
-  shape  = RoundedCornerShape(12.dp),
+  shape = RoundedCornerShape(12.dp),
   colors = CardDefaults.elevatedCardColors(
     containerColor = MaterialTheme.colorScheme.surfaceContainerLow
   ),
@@ -188,7 +194,6 @@ private fun ActionCardButton(
     )
   }
 }
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -227,57 +232,5 @@ private fun GoalField(ui: ProfileUiState, vm: ProfileViewModel) {
     }
   } else {
     InfoCard("Цель", ui.goal)
-  }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun ActivityField(ui: ProfileUiState, vm: ProfileViewModel) {
-  if (ui.isEditing) {
-    var expanded by remember { mutableStateOf(false) }
-    ExposedDropdownMenuBox(
-      expanded = expanded,
-      onExpandedChange = { expanded = !expanded }
-    ) {
-      OutlinedTextField(
-        value = ui.activity,
-        onValueChange = {},
-        readOnly = true,
-        label = { Text("Активность") },
-        placeholder = { Text("—") },
-        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded) },
-        modifier = Modifier
-          .fillMaxWidth()
-          .menuAnchor()
-      )
-      ExposedDropdownMenu(
-        expanded = expanded,
-        onDismissRequest = { expanded = false }
-      ) {
-        listOf("Низкий", "Средний", "Высокий").forEach { a ->
-          DropdownMenuItem(
-            text = { Text(a) },
-            onClick = {
-              vm.onActivity(a)
-              expanded = false
-            }
-          )
-        }
-      }
-    }
-  } else {
-    InfoCard("Активность", ui.activity)
-  }
-}
-
-@Composable
-private fun InfoCard(label: String, value: String) = ElevatedCard(
-  modifier = Modifier.fillMaxWidth(),
-  colors = CardDefaults.elevatedCardColors()
-) {
-  Column(Modifier.padding(16.dp)) {
-    Text(label, style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
-    Spacer(Modifier.height(4.dp))
-    Text(if (value.isBlank()) "—" else value, style = MaterialTheme.typography.bodyLarge)
   }
 }

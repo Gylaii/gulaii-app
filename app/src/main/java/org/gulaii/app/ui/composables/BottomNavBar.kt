@@ -1,7 +1,14 @@
 package org.gulaii.app.ui.composables
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -12,15 +19,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
 import org.gulaii.app.R
 import org.gulaii.app.ui.navigation.Screen
 import org.gulaii.app.ui.theme.roseLight
 
 @Composable
 fun BottomNavBar(
-  nav: NavHostController,
-  current: Screen
+  current: Screen,
+  onNavigate: (Screen) -> Unit
 ) {
   Box(
     Modifier
@@ -37,7 +43,7 @@ fun BottomNavBar(
     ) {
       @Composable
       fun Item(icon: Int, dest: Screen) {
-        IconButton({ nav.navigate(dest) }) {
+        IconButton({ onNavigate(dest) }) {
           Icon(
             painterResource(icon),
             contentDescription = dest.toString(),

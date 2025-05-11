@@ -1,23 +1,29 @@
 package org.gulaii.app.ui.screens.walk
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.*
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
 import org.gulaii.app.R
 import org.gulaii.app.data.repository.ActivityType
 import org.gulaii.app.di.ServiceLocator
+import org.gulaii.app.ui.composables.ActivityCard
 import org.gulaii.app.ui.composables.BottomNavBar
 import org.gulaii.app.ui.navigation.Screen
-import org.gulaii.app.ui.util.ActivityCard
 import org.gulaii.app.ui.util.dateLabel
 import org.gulaii.app.ui.util.plus
 import java.time.LocalDate
@@ -25,7 +31,7 @@ import java.time.LocalDate
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WalkView(
-  nav: NavHostController,
+  onNavigate: (Screen) -> Unit,
 ) {
   val cs = MaterialTheme.colorScheme
   val activities by ServiceLocator.activityRepo()
@@ -35,11 +41,18 @@ fun WalkView(
   Scaffold(
     floatingActionButton = {
       FloatingActionButton(
-        onClick = { nav.navigate(Screen.AddActivityEntry) },
+        onClick = { onNavigate(Screen.AddActivityEntry) },
         containerColor = cs.primaryContainer
-      ) { Icon(Icons.Default.Add, contentDescription = "add") }
+      ) {
+        Icon(Icons.Default.Add, contentDescription = "add")
+      }
     },
-    bottomBar = { BottomNavBar(nav, Screen.Walk) }
+    bottomBar = {
+      BottomNavBar(
+        current = Screen.Walk,
+        onNavigate = onNavigate
+      )
+    }
   ) { pad ->
 
     LazyColumn(
@@ -61,16 +74,17 @@ fun WalkView(
 
           items(listForDate) { act ->
             ActivityCard(
-              title    = act.type.ru,
+              title = act.type.ru,
               subtitle = act.durationMin.toDurationString(),
-              iconRes  = iconByType.getValue(act.type),
-              time     = "${act.distanceKm} км"
+              iconRes = iconByType.getValue(act.type),
+              time = "${act.distanceKm} км"
             )
           }
         }
     }
   }
 }
+
 
 fun Int.toDurationString(): String {
   val hours = this / 60
@@ -89,6 +103,6 @@ fun Int.toDurationString(): String {
 
 val iconByType: Map<ActivityType, Int> = mapOf(
   ActivityType.WALK to R.drawable.ic_walk,
-  ActivityType.RUN  to R.drawable.ic_run,
+  ActivityType.RUN to R.drawable.ic_run,
   ActivityType.BIKE to R.drawable.ic_bike
 )

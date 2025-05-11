@@ -3,13 +3,10 @@ package org.gulaii.app.ui.screens.authScreen
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import org.gulaii.app.di.ServiceLocator
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.receiveAsFlow
 
 enum class AuthMode { SignIn, SignUp }
 
@@ -24,8 +21,8 @@ data class AuthUiState(
 }
 
 sealed interface AuthEvent {
-  data class Success(val mode: AuthMode) : AuthEvent
-  data class Error  (val message: String) : AuthEvent
+  data class Success(val mode: AuthMode, val needWizard: Boolean) : AuthEvent
+  data class Error(val message: String) : AuthEvent
 }
 
 class AuthScreenViewModel : ViewModel() {
@@ -38,13 +35,15 @@ class AuthScreenViewModel : ViewModel() {
   private val _events = Channel<AuthEvent>(Channel.BUFFERED)
   val events = _events.receiveAsFlow()
 
-  fun onEmailChange(e: String)    = _ui.update { it.copy(email = e) }
+  fun onEmailChange(e: String) = _ui.update { it.copy(email = e) }
+
   fun onPasswordChange(p: String) = _ui.update { it.copy(password = p) }
-  fun toggleMode()                = _ui.update {
+
+  fun toggleMode() = _ui.update {
     it.copy(mode = if (it.mode == AuthMode.SignIn) AuthMode.SignUp else AuthMode.SignIn)
   }
 
-  fun onPrimary(onResult: (needWizard: Boolean) -> Unit) = viewModelScope.launch {
+  fun onPrimary() = viewModelScope.launch {
     _ui.update { it.copy(isLoading = true, error = null) }
 
     runCatching {
@@ -54,7 +53,7 @@ class AuthScreenViewModel : ViewModel() {
         repo.register(_ui.value.email, _ui.value.password, "Alice")
     }.onSuccess {
       val needWizard = (_ui.value.mode == AuthMode.SignUp)
-      onResult(needWizard)
+      _events.send(AuthEvent.Success(_ui.value.mode, needWizard))
     }.onFailure { e ->
       Log.e("AuthVM", "Auth failed", e)
       _ui.update { it.copy(isLoading = false) }

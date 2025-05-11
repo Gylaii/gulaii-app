@@ -14,17 +14,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
 import org.gulaii.app.ui.composables.CustomTextField
 import org.gulaii.app.ui.composables.PillButton
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 fun FoodEntryScreen(
-  nav: NavHostController,
+  onBack: () -> Unit,
   onSaved: () -> Unit,
-  vm: FoodEntryContract =
-    androidx.lifecycle.viewmodel.compose.viewModel<AddFoodEntryViewModel>()
+  vm: FoodEntryContract = androidx.lifecycle.viewmodel.compose.viewModel<AddFoodEntryViewModel>()
 ) {
   val uiState by vm.ui
   val scroll  = rememberScrollState()
@@ -34,7 +32,7 @@ fun FoodEntryScreen(
       TopAppBar(
         title = { Text(if (vm is AddFoodEntryViewModel) "Новая запись" else "Редактировать запись") },
         navigationIcon = {
-          IconButton({ nav.popBackStack() }) {
+          IconButton(onClick = onBack) {
             Icon(Icons.Filled.ArrowBack, contentDescription = "back")
           }
         }
@@ -69,7 +67,10 @@ fun FoodEntryScreen(
         modifier    = Modifier.fillMaxWidth().height(56.dp),
         isEnabled   = uiState.editDishes.any { it.isSaved },
         buttonColor = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary),
-        clickAction = { vm.saveAll(); onSaved() }
+        clickAction = {
+          vm.saveAll()
+          onSaved()
+        }
       ) { Text("Сохранить", color = MaterialTheme.colorScheme.onPrimary) }
 
       if (vm.templates.isNotEmpty()) {
@@ -120,15 +121,14 @@ fun FoodEntryScreen(
 }
 
 private val numberRegex = Regex("""[0-9.,]*""")
+
 @Composable
 private fun DishListSection(vm: FoodEntryContract) {
   val uiState by vm.ui
   Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-
     uiState.editDishes.forEachIndexed { idx, dish ->
       DishCard(idx, dish, vm)
     }
-
     OutlinedButton(
       modifier = Modifier.fillMaxWidth().height(56.dp),
       onClick  = vm::addDish,
@@ -174,7 +174,6 @@ private fun DishCard(index: Int, dish: DishUi, vm: FoodEntryContract) {
           enabled = !dish.isSaved,
         )
       }
-
       Row(
         Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -188,7 +187,6 @@ private fun DishCard(index: Int, dish: DishUi, vm: FoodEntryContract) {
         } else {
           Text("Сохранено", style = MaterialTheme.typography.bodySmall)
         }
-
         TextButton(
           onClick  = { vm.removeDish(index) }
         ) { Text("Удалить блюдо") }

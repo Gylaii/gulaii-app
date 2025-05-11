@@ -1,32 +1,37 @@
 package org.gulaii.app.ui.screens.food
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.*
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
+import org.gulaii.app.R
 import org.gulaii.app.data.repository.FoodRepository
 import org.gulaii.app.di.ServiceLocator
+import org.gulaii.app.ui.composables.ActivityCard
 import org.gulaii.app.ui.composables.BottomNavBar
 import org.gulaii.app.ui.navigation.Screen
-import org.gulaii.app.ui.util.ActivityCard
 import org.gulaii.app.ui.util.dateLabel
 import org.gulaii.app.ui.util.plus
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-import org.gulaii.app.R
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FoodView(
-  nav: NavHostController,
+  onNavigateToAddEntry: () -> Unit,
+  onNavigateToEditEntry: (String) -> Unit,
+  onNavigate: (Screen) -> Unit,
   foodRepo: FoodRepository = ServiceLocator.foodRepo(),
 ) {
   val meals by foodRepo.entries.collectAsState(initial = emptyList())
@@ -36,11 +41,18 @@ fun FoodView(
   Scaffold(
     floatingActionButton = {
       FloatingActionButton(
-        onClick = { nav.navigate(Screen.AddFoodEntry) },
+        onClick = onNavigateToAddEntry,
         containerColor = cs.primaryContainer
-      ) { Icon(Icons.Default.Add, contentDescription = "add") }
+      ) {
+        Icon(Icons.Default.Add, contentDescription = "add")
+      }
     },
-    bottomBar = { BottomNavBar(nav, Screen.Food) }
+    bottomBar = {
+      BottomNavBar(
+        current = Screen.Food,
+        onNavigate = onNavigate
+      )
+    }
   ) { pad ->
 
     LazyColumn(
@@ -64,7 +76,7 @@ fun FoodView(
               subtitle = "${entry.calories} Ккал",
               iconRes  = R.drawable.ic_food2,
               time     = entry.dateTime.format(timeFormatter),
-              onClick  = { nav.navigate(Screen.EditFoodEntry(entry.id)) }
+              onClick  = { onNavigateToEditEntry(entry.id) }
             )
           }
         }

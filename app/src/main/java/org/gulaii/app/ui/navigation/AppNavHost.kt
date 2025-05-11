@@ -1,3 +1,4 @@
+// 📁 ui/navigation/AppNavHost.kt
 package org.gulaii.app.ui.navigation
 
 import androidx.compose.runtime.Composable
@@ -7,6 +8,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import kotlinx.coroutines.delay
+import org.gulaii.app.ui.navigation.graph.*
 import org.gulaii.app.ui.screens.common.LoadingScreen
 
 @Composable
@@ -22,10 +24,9 @@ fun AppNavHost(
     registerInitialGraph(navController)
     registerOnboardingGraph(navController)
     registerAuthGraph(navController)
-    profileWizardGraph(navController) {
-      navController.navigate(Screen.Loading) {
-        popUpTo(WizardGraph) { inclusive = true }
-      }
+
+    registerWizardGraph(navController) {
+      navController.navigate(Screen.Loading)
     }
 
     composable<Screen.Loading> {
@@ -33,11 +34,11 @@ fun AppNavHost(
       LaunchedEffect(Unit) {
         delay(800)
         navController.navigate(HomeGraph) {
-          popUpTo(Screen.Loading) { inclusive = true }
+          popUpTo<Screen.Loading> { inclusive = true }
         }
       }
     }
 
-//    registerHomeGraph(navController)
+    registerHomeGraph(navController)
   }
 }
