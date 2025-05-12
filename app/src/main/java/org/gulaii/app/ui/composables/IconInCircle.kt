@@ -25,6 +25,6 @@ fun IconInCircle(iconRes: Int, modifier: Modifier = Modifier) = Box(
     painter = painterResource(iconRes),
     contentDescription = null,
     tint = MaterialTheme.colorScheme.onBackground,
-    modifier = Modifier.size(24.dp)
+    modifier = Modifier.size(30.dp)
   )
 }

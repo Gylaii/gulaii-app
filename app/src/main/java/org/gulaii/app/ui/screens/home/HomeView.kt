@@ -1,55 +1,38 @@
 package org.gulaii.app.ui.screens.home
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import org.gulaii.app.R
 import org.gulaii.app.data.repository.ActivityRepository
 import org.gulaii.app.data.repository.FoodRepository
 import org.gulaii.app.di.ServiceLocator
 import org.gulaii.app.ui.composables.ActivityCard
 import org.gulaii.app.ui.composables.BottomNavBar
+import org.gulaii.app.ui.composables.MetricWideCardCustom
+import org.gulaii.app.ui.composables.StatSmallCard
+import org.gulaii.app.ui.composables.StepsCard
+import org.gulaii.app.ui.composables.TodayHeader
 import org.gulaii.app.ui.navigation.Screen
 import org.gulaii.app.ui.screens.walk.iconByType
 import org.gulaii.app.ui.screens.walk.toDurationString
-import org.gulaii.app.ui.theme.roseLight
 import java.time.LocalDate
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -165,154 +148,3 @@ fun HomeView(
     }
   }
 }
-
-@Composable
-private fun StepsCard(
-  steps: Int,
-  modifier: Modifier = Modifier
-) = Card(
-  modifier = modifier,
-  colors = CardDefaults.cardColors(containerColor = roseLight),
-  shape  = RoundedCornerShape(16.dp)
-) {
-  Box(Modifier.fillMaxSize().padding(16.dp)) {
-    Row(
-      modifier = Modifier.align(Alignment.TopStart),
-      verticalAlignment = Alignment.CenterVertically
-    ) {
-      IconInCircle(iconRes = R.drawable.ic_steps, modifier = Modifier.size(44.dp))
-      Spacer(Modifier.width(8.dp))
-      Text("Шаги",
-        style = MaterialTheme.typography.bodyLarge,
-        color = MaterialTheme.colorScheme.primary,
-        fontSize = 25.sp
-      )
-    }
-    Text(
-      text = steps.toString(),
-      style = MaterialTheme.typography.bodyLarge,
-      modifier = Modifier.align(Alignment.Center),
-      fontSize = 35.sp
-    )
-  }
-}
-
-@Composable
-private fun StatSmallCard(
-  value: String,
-  label: String
-) = OutlinedCard(
-  modifier = Modifier
-    .fillMaxWidth()
-    .height(79.dp),
-  shape  = RoundedCornerShape(16.dp),
-  border = CardDefaults.outlinedCardBorder().copy(width = 1.dp)
-) {
-  Column(
-    Modifier
-      .fillMaxSize()
-      .padding(16.dp),
-    verticalArrangement = Arrangement.Center,
-    horizontalAlignment = Alignment.CenterHorizontally
-  ) {
-    Text(
-      text = value,
-      style = MaterialTheme.typography.bodyLarge,
-      textAlign = TextAlign.Center,
-      fontSize = 20.sp
-    )
-
-    Text(
-      text = label,
-      style = MaterialTheme.typography.bodyLarge,
-      textAlign = TextAlign.Center,
-      fontSize = 20.sp
-    )
-  }
-}
-
-@Composable
-private fun MetricWideCardCustom(
-  icon: Int,
-  title: String,
-  value: String,
-  unit: String,
-  extra: String? = null
-) = Card(
-  modifier = Modifier
-    .fillMaxWidth()
-    .heightIn(min = 80.dp),
-  colors = CardDefaults.cardColors(
-    containerColor = MaterialTheme.colorScheme.surfaceContainerLow
-  ),
-  shape = RoundedCornerShape(16.dp)
-) {
-  Row(
-    modifier = Modifier
-      .fillMaxWidth()
-      .padding(16.dp),
-    verticalAlignment = Alignment.CenterVertically
-  ) {
-
-    IconInCircle(
-      iconRes = icon,
-      modifier = Modifier.size(44.dp)
-    )
-    Spacer(Modifier.width(12.dp))
-
-    Column(
-      modifier = Modifier.weight(1f)
-    ) {
-      Text(
-        text = title
-      )
-      extra?.let {
-        Text(
-          text = it,
-          style = MaterialTheme.typography.bodySmall
-        )
-      }
-    }
-
-    Row(
-      verticalAlignment = Alignment.Bottom
-    ) {
-      Text(value)
-      Spacer(Modifier.width(4.dp))
-      Text(unit)
-    }
-  }
-}
-
-@Composable
-private fun IconInCircle(iconRes: Int, modifier: Modifier = Modifier) = Box(
-  modifier = modifier
-    .clip(CircleShape)
-    .background(Color.White),
-  contentAlignment = Alignment.Center
-) {
-  Icon(
-    painter = painterResource(iconRes),
-    contentDescription = null,
-    tint = MaterialTheme.colorScheme.onBackground,
-    modifier = Modifier.size(30.dp)
-  )
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun TodayHeader() {
-  CenterAlignedTopAppBar(
-    title = { Text("Ваши данные за сегодня") },
-    colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-      containerColor   = roseLight,
-      titleContentColor = MaterialTheme.colorScheme.onPrimary
-    ),
-    scrollBehavior = null
-  )
-}
-
-
-
-
-

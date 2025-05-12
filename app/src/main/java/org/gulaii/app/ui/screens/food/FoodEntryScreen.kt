@@ -1,20 +1,36 @@
 package org.gulaii.app.ui.screens.food
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilterChip
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import org.gulaii.app.ui.composables.CustomTextField
+import org.gulaii.app.ui.composables.DateTimeSection
+import org.gulaii.app.ui.composables.DishListSection
 import org.gulaii.app.ui.composables.PillButton
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
@@ -115,81 +131,6 @@ fun FoodEntryScreen(
             }
           }
         }
-      }
-    }
-  }
-}
-
-private val numberRegex = Regex("""[0-9.,]*""")
-
-@Composable
-private fun DishListSection(vm: FoodEntryContract) {
-  val uiState by vm.ui
-  Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-    uiState.editDishes.forEachIndexed { idx, dish ->
-      DishCard(idx, dish, vm)
-    }
-    OutlinedButton(
-      modifier = Modifier.fillMaxWidth().height(56.dp),
-      onClick  = vm::addDish,
-      enabled  = uiState.editDishes.any { it.isSaved }
-    ) { Text("Добавить ещё блюдо") }
-  }
-}
-
-@Composable
-private fun DishCard(index: Int, dish: DishUi, vm: FoodEntryContract) {
-  OutlinedCard {
-    Column(
-      Modifier.padding(12.dp),
-      verticalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-      CustomTextField(
-        label         = "Название",
-        value         = dish.name,
-        onValueChange = { vm.onDishChange(index) { name = it } },
-        enabled       = !dish.isSaved
-      )
-      Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-        CustomTextField(
-          modifier      = Modifier.weight(1f),
-          label = "грамм",
-          value = dish.grams,
-          keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
-          onValueChange = { new ->
-            if (numberRegex.matches(new))
-              vm.onDishChange(index) { grams = new }
-          },
-          enabled = !dish.isSaved,
-        )
-        CustomTextField(
-          modifier      = Modifier.weight(1f),
-          label = "Ккал",
-          value = dish.kcal,
-          keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
-          onValueChange = { new ->
-            if (numberRegex.matches(new))
-              vm.onDishChange(index) { kcal = new }
-          },
-          enabled = !dish.isSaved,
-        )
-      }
-      Row(
-        Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment     = Alignment.CenterVertically
-      ) {
-        if (!dish.isSaved) {
-          TextButton(
-            onClick  = { vm.saveDish(index) },
-            enabled  = dish.name.isNotBlank()
-          ) { Text("Сохранить блюдо") }
-        } else {
-          Text("Сохранено", style = MaterialTheme.typography.bodySmall)
-        }
-        TextButton(
-          onClick  = { vm.removeDish(index) }
-        ) { Text("Удалить блюдо") }
       }
     }
   }

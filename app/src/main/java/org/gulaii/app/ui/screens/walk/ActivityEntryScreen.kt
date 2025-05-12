@@ -14,8 +14,8 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import org.gulaii.app.data.repository.ActivityType
 import org.gulaii.app.ui.composables.CustomTextField
+import org.gulaii.app.ui.composables.DateTimeSection
 import org.gulaii.app.ui.composables.PillButton
-import org.gulaii.app.ui.screens.food.DateTimeSection
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
