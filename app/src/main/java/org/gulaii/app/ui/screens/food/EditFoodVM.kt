@@ -1,14 +1,15 @@
 package org.gulaii.app.ui.screens.food
 
+import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewmodel.viewModelFactory
+import androidx.lifecycle.ViewModelProvider
 import org.gulaii.app.data.repository.Dish
 import org.gulaii.app.data.repository.FoodEntry
 import org.gulaii.app.data.repository.FoodRepository
-import androidx.compose.runtime.State
 import java.time.LocalDateTime
 
+@Suppress("UNCHECKED_CAST")
 class EditFoodVM(
   private val original: FoodEntry,
   private val repo: FoodRepository
@@ -32,21 +33,21 @@ class EditFoodVM(
   override fun selectMeal(t: MealType)      = update { it.copy(currentMeal = t) }
   override fun setDate(dt: LocalDateTime)   = update { it.copy(dateTime = dt) }
 
-  override fun onDishChange(i: Int, mut: DishUi.() -> Unit) = update {
+  override fun onDishChange(index: Int, mut: DishUi.() -> Unit) = update {
     it.copy(editDishes = it.editDishes.mapIndexed { idx, d ->
-      if (idx == i) d.copy().apply(mut) else d
+      if (idx == index) d.copy().apply(mut) else d
     })
   }
 
-  override fun saveDish(i: Int) = update {
+  override fun saveDish(index: Int) = update {
     it.copy(editDishes = it.editDishes.mapIndexed { idx, d ->
-      if (idx == i) d.copy(isSaved = true) else d
+      if (idx == index) d.copy(isSaved = true) else d
     })
   }
 
   override fun addDish()  = update { it.copy(editDishes = it.editDishes + DishUi()) }
-  override fun removeDish(i: Int) = update {
-    it.copy(editDishes = it.editDishes.filterIndexed { idx, _ -> idx != i })
+  override fun removeDish(index: Int) = update {
+    it.copy(editDishes = it.editDishes.filterIndexed { idx, _ -> idx != index })
   }
 
   override fun applyTemplate(tpl: DishUi) {
@@ -80,8 +81,12 @@ class EditFoodVM(
   }
 
   companion object {
-    fun factory(e: FoodEntry, r: FoodRepository) =
-      viewModelFactory { EditFoodVM(e, r) }
+    fun factory(e: FoodEntry, r: FoodRepository): ViewModelProvider.Factory =
+      object : ViewModelProvider.Factory {
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+          return EditFoodVM(e, r) as T
+        }
+      }
   }
 }
 
