@@ -1,5 +1,6 @@
 package org.gulaii.app.ui.composables
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -24,6 +26,8 @@ fun ActivityCard(
   subtitle: String,
   iconRes: Int,
   time: String = "",
+  selectable: Boolean = false,
+  selected:  Boolean = false,
   onClick: () -> Unit = {}
 ) {
   Card(
@@ -39,6 +43,14 @@ fun ActivityCard(
         .padding(16.dp),
       verticalAlignment = Alignment.CenterVertically
     ) {
+      if (selectable) {
+        Checkbox(
+          checked   = selected,
+          onCheckedChange = { onClick() }
+        )
+        Spacer(Modifier.width(8.dp))
+      }
+
       IconInCircle(iconRes, Modifier.size(44.dp))
       Spacer(Modifier.width(12.dp))
       Column(modifier = Modifier.weight(1f)) {

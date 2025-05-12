@@ -25,4 +25,8 @@ class ActivityRepository {
   }
 
   fun find(id: String) = _entries.value.firstOrNull { it.id == id }
+
+  fun delete(id: String) {
+    _entries.value = _entries.value.filterNot { it.id == id }
+  }
 }

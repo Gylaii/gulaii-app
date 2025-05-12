@@ -6,14 +6,21 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.unit.dp
 import org.gulaii.app.R
@@ -27,6 +34,7 @@ import org.gulaii.app.ui.util.plus
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FoodView(
   onNavigateToAddEntry: () -> Unit,
@@ -35,17 +43,47 @@ fun FoodView(
   foodRepo: FoodRepository = ServiceLocator.foodRepo(),
 ) {
   val meals by foodRepo.entries.collectAsState(initial = emptyList())
-  val timeFormatter = remember { DateTimeFormatter.ofPattern("HH:mm") }
-  val cs = MaterialTheme.colorScheme
+  val timeFmt = remember { DateTimeFormatter.ofPattern("HH:mm") }
+
+  var selectMode      by remember { mutableStateOf(false) }
+  var selectedIds     by remember { mutableStateOf(setOf<String>()) }
+  fun toggleSelect(id: String) {
+    selectedIds = if (id in selectedIds) selectedIds - id else selectedIds + id
+  }
 
   Scaffold(
+    topBar = {
+      TopAppBar(
+        title = { Text("Питание") },
+        actions = {
+          if (meals.isNotEmpty()) {
+            IconButton(
+              onClick = {
+                if (selectMode) {
+                  selectedIds.forEach(foodRepo::delete)
+                  selectedIds = emptySet()
+                  selectMode  = false
+                } else {
+                  selectMode = true
+                }
+              }
+            ) {
+              Icon(
+                imageVector = if (selectMode) Icons.Default.Check
+                else Icons.Default.Delete,
+                contentDescription = if (selectMode)
+                  "Подтвердить удаление" else "Удалить"
+              )
+            }
+          }
+        }
+      )
+    },
     floatingActionButton = {
-      FloatingActionButton(
-        onClick = onNavigateToAddEntry,
-        containerColor = cs.primaryContainer
-      ) {
-        Icon(Icons.Default.Add, contentDescription = "add")
-      }
+      if (!selectMode)
+        FloatingActionButton(onClick = onNavigateToAddEntry) {
+          Icon(Icons.Default.Add, null)
+        }
     },
     bottomBar = {
       BottomNavBar(
@@ -70,13 +108,18 @@ fun FoodView(
             )
           }
 
-          items(list) { entry ->
+          items(list, key = { it.id }) { entry ->
             ActivityCard(
-              title    = entry.meal.ru,
-              subtitle = "${entry.calories} Ккал",
-              iconRes  = R.drawable.ic_food2,
-              time     = entry.dateTime.format(timeFormatter),
-              onClick  = { onNavigateToEditEntry(entry.id) }
+              title       = entry.meal.ru,
+              subtitle    = "${entry.calories} Ккал",
+              iconRes     = R.drawable.ic_food2,
+              time        = entry.dateTime.format(timeFmt),
+              selectable  = selectMode,
+              selected    = entry.id in selectedIds,
+              onClick     = {
+                if (selectMode)   toggleSelect(entry.id)
+                else              onNavigateToEditEntry(entry.id)
+              }
             )
           }
         }
