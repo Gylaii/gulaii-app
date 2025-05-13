@@ -106,7 +106,9 @@ fun AuthScreenView(
         label = "Электронная почта",
         value = uiState.email,
         onValueChange = viewModel::onEmailChange,
-        leadingIcon = painterResource(R.drawable.outline_email_24)
+        leadingIcon = painterResource(R.drawable.outline_email_24),
+        inputError = uiState.emailError != null,
+        errorText  = uiState.emailError ?: ""
       )
 
       Spacer(Modifier.height(20.dp))
@@ -117,6 +119,8 @@ fun AuthScreenView(
         onValueChange = viewModel::onPasswordChange,
         leadingIcon = painterResource(R.drawable.outline_lock_24),
         onTrailingIconClick = { passwordVisible = !passwordVisible },
+        inputError = uiState.passwordError != null,
+        errorText  = uiState.passwordError ?: "",
         trailingIcon = painterResource(
           if (passwordVisible)
             R.drawable.outline_remove_red_eye_24
