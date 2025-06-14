@@ -1,4 +1,3 @@
-// 📁 ui/navigation/AppNavHost.kt
 package org.gulaii.app.ui.navigation
 
 import androidx.compose.runtime.Composable
